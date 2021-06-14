@@ -14,7 +14,7 @@
 #' 999 if unknown.
 #' @param Vs30 Shear wave velocity averaged over top 30 m (in m/s)
 #' @param return.type The indicator specifies which type of data return:
-#' 1 for the med/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
+#' 1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
 #' 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr
 #' @return See return.type for the returned results
 #' @examples bssa_2014_nga(M = 5, T = 1000, Rjb = 85, Fault_Type = 1, region = 1, z1 = 999, Vs30 = 350)
@@ -43,7 +43,7 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
   NS = (Fault_Type == 2)
   RS = (Fault_Type == 3)
 
-  if(length(T) == 1 & T == 1000){ # Compute median and sigma with pre-defined period
+  if(length(T) == 1 & T[1] == 1000){ # Compute median and sigma with pre-defined period
     med <- rep(0,length(period))
     sig <- rep(0,length(period))
     phi <- rep(0,length(period))
@@ -138,28 +138,28 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         F_dz1_temp <- c(F_dz1_low, F_dz1_high)
         PGAr_temp <- c(log(PGAr_low), log(PGAr_high))
 
-        temp_med <- approx(x, Y_sa, log(Ti))
+        temp_med <- approx(x, Y_sa, log(Ti))$y
         med[i] = exp(temp_med$y)    # linear interpolation
-        temp_sig <- approx(x, Y_sigma, log(Ti))
+        temp_sig <- approx(x, Y_sigma, log(Ti))$y
         sig[i] <- temp_sig$y
-        temp_phi <- approx(x, Y_phi, log(Ti))
+        temp_phi <- approx(x, Y_phi, log(Ti))$y
         phi[i] <- temp_phi$y
-        temp_tau <- approx(x, Y_tau, log(Ti))
+        temp_tau <- approx(x, Y_tau, log(Ti))$y
         tau[i] <- temp_tau$y
 
-        FE_med <- approx(x, FE_temp, log(Ti))
-        FP_med <- approx(x, FP_temp, log(Ti))
-        FS_med <- approx(x, FS_temp, log(Ti))
+        FE_med <- approx(x, FE_temp, log(Ti))$y
+        FP_med <- approx(x, FP_temp, log(Ti))$y
+        FS_med <- approx(x, FS_temp, log(Ti))$y
         F_E[i] <- FE_med$y
         F_P[i] <- FP_med$y
         F_S[i] <- FS_med$y
 
-        r_med <- approx(x, r_temp, log(Ti))
-        ln_Flin_med <- approx(x, ln_Flin_temp, log(Ti))
-        ln_Fnlin_med <- approx(x, ln_Fnlin_temp, log(Ti))
-        f2_med <- approx(x, f2_temp, log(Ti))
-        F_dz1_med <- approx(x, F_dz1_temp, log(Ti))
-        PGAr_med <- approx(x, PGAr_temp, log(Ti))
+        r_med <- approx(x, r_temp, log(Ti))$y
+        ln_Flin_med <- approx(x, ln_Flin_temp, log(Ti))$y
+        ln_Fnlin_med <- approx(x, ln_Fnlin_temp, log(Ti))$y
+        f2_med <- approx(x, f2_temp, log(Ti))$y
+        F_dz1_med <- approx(x, F_dz1_temp, log(Ti))$y
+        PGAr_med <- approx(x, PGAr_temp, log(Ti))$y
         r[i] <- r_med$y
         ln_Flin[i] <- ln_Flin_med$y
         ln_Fnlin[i] <- ln_Fnlin_med$y
@@ -243,7 +243,7 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
 #' 999 if unknown.
 #' @param Vs30 Shear wave velocity averaged over top 30 m (in m/s)
 #' @param return.type The indicator specifies which type of data return:
-#' 1 for the med/sigma/phi/tau; 2 for F_E/F_P/F_S;
+#' 1 for the med (in g)/sigma/phi/tau; 2 for F_E/F_P/F_S;
 #' 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr
 #' @param coeffs The coefficient table of BSSA 2014. You can use the internal saved data object, bssa_2014_coeffs
 #' @return See return.type for the returned results

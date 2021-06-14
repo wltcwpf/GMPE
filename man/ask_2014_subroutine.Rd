@@ -70,7 +70,7 @@ from the fault line with down-dip direction to be positive}
 \item{CRjb}{Centroid CRjb, assumed to be 999.9 here -> assume no aftershock}
 }
 \value{
-An array of four values: (1) median spectral acceleration prediction; (2)
+An array of four values: (1) median spectral acceleration prediction (in g); (2)
 logarithmic standard deviation of spectral acceleration prediction; (3) logarithmic
 standard deviation of within event residuals; and (4) logarithmic standard deviation of between
 event residuals at the period of ip.

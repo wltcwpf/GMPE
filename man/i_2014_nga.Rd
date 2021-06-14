@@ -20,7 +20,7 @@ Note no PGV computation}
 1 for reverse}
 }
 \value{
-A list of five elements is returned: med - median spectral acceleration prediction;
+A list of five elements is returned: med - median spectral acceleration prediction (in g);
 sigma - logarithmic standard deviation of spectral acceleration prediction; phi - logarithmic
 standard deviation of within event residuals; tau - logarithmic standard deviation of between
 event residuals; period - the corresponding oscillator periods

@@ -21,7 +21,7 @@
 #' @param region Region indicator: 0 for global (incl. Taiwan); 1 for California; 2 for Japan;
 #' 3 for China; 4 for Italy; 5 for Turkey
 #' @param d_DPP Centered on the site and earthquake specific average. d_DPP = 0 for median calc (by default)
-#' @return A list of five elements is returned: med - median spectral acceleration prediction;
+#' @return A list of five elements is returned: med - median spectral acceleration prediction (in g);
 #' sigma - logarithmic standard deviation of spectral acceleration prediction; phi - logarithmic
 #' standard deviation of within event residuals; tau - logarithmic standard deviation of between
 #' event residuals; period - the corresponding oscillator periods
@@ -64,7 +64,7 @@ cy_2014_nga <- function(M, T = 1000, Rrup, Rjb, Rx, Ztor, dip, lambda, Z10 = 999
   d_DPP = 0
 
 
-  if (length(T) == 1 & T == 1000) {
+  if (length(T) == 1 & T[1] == 1000) {
 
     # Compute Sa and sigma with pre-defined period
     Sa = rep(0, length(period))
@@ -131,16 +131,16 @@ cy_2014_nga <- function(M, T = 1000, Rrup, Rjb, Rx, Ztor, dip, lambda, Z10 = 999
                                       Vs30, Vs30_code, region, d_DPP)
 
         Sa[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[1]), log(res_high[1])),
-                           xout = log(Ti)))
+                           xout = log(Ti))$y)
 
         Sigma[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[2]), log(res_high[2])),
-                              xout = log(Ti)))
+                              xout = log(Ti))$y)
 
         Phi[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[3]), log(res_high[3])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
         Tau[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[4]), log(res_high[4])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
         if (Sa[i] < res_PGA[1] & Ti < 0.3 & Ti > 0)
           Sa[i] = res_PGA[1]
@@ -210,7 +210,7 @@ cy_2014_nga <- function(M, T = 1000, Rrup, Rjb, Rx, Ztor, dip, lambda, Z10 = 999
 #' @param region Region indicator: 0 for global (incl. Taiwan); 1 for California; 2 for Japan;
 #' 3 for China; 4 for Italy; 5 for Turkey
 #' @param d_DPP Centered on the site and earthquake specific average. d_DPP = 0 for median calc (by default)
-#' @return An array of four values: (1) median spectral acceleration prediction; (2)
+#' @return An array of four values: (1) median spectral acceleration prediction (in g); (2)
 #' logarithmic standard deviation of spectral acceleration prediction; (3) logarithmic
 #' standard deviation of within event residuals; and (4) logarithmic standard deviation of between
 #' event residuals at the period of ip.

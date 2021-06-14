@@ -8,7 +8,7 @@
 #' @param Rrup Closest distance (km) to the ruptured plane
 #' @param Fault_Type The indicator of fault type: 0 for strike slip & other non-reverse faulting;
 #' 1 for reverse
-#' @return A list of five elements is returned: med - median spectral acceleration prediction;
+#' @return A list of five elements is returned: med - median spectral acceleration prediction (in g);
 #' sigma - logarithmic standard deviation of spectral acceleration prediction; phi - logarithmic
 #' standard deviation of within event residuals; tau - logarithmic standard deviation of between
 #' event residuals; period - the corresponding oscillator periods
@@ -26,7 +26,7 @@ i_2014_nga <- function(M, Vs30, T = 1000, Rrup, Fault_Type) {
   if (Vs30 > 1200)
     Vs30 = 1200
 
-  if (length(T) == 1 & T == 1000) {
+  if (length(T) == 1 & T[1] == 1000) {
 
     # use pre-defined period
     Sa <- rep(0, length(period))
@@ -83,16 +83,16 @@ i_2014_nga <- function(M, Vs30, T = 1000, Rrup, Fault_Type) {
         res_high <- i_2014_subroutine(M, ip_high, Rrup, Vs30, Fault_Type)
 
         Sa[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[1]), log(res_high[1])),
-                           xout = log(Ti)))
+                           xout = log(Ti))$y)
 
         Sigma[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[2]), log(res_high[2])),
-                              xout = log(Ti)))
+                              xout = log(Ti))$y)
 
         Phi[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[3]), log(res_high[3])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
         Tau[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[4]), log(res_high[4])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
       } else {
 
@@ -137,7 +137,7 @@ i_2014_nga <- function(M, Vs30, T = 1000, Rrup, Fault_Type) {
 #' @param Vs30 Shear wave velocity averaged over top 30 m (in m/s).
 #' @param Fault_Type The indicator of fault type: 0 for strike slip & other non-reverse faulting;
 #' 1 for reverse
-#' @return An array of four values: (1) median spectral acceleration prediction; (2)
+#' @return An array of four values: (1) median spectral acceleration prediction (in g); (2)
 #' logarithmic standard deviation of spectral acceleration prediction; (3) logarithmic
 #' standard deviation of within event residuals; and (4) logarithmic standard deviation of between
 #' event residuals at the period of ip.

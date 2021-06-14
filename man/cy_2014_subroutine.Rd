@@ -60,7 +60,7 @@ from the fault line with down-dip direction to be positive}
 \item{d_DPP}{Centered on the site and earthquake specific average. d_DPP = 0 for median calc (by default)}
 }
 \value{
-An array of four values: (1) median spectral acceleration prediction; (2)
+An array of four values: (1) median spectral acceleration prediction (in g); (2)
 logarithmic standard deviation of spectral acceleration prediction; (3) logarithmic
 standard deviation of within event residuals; and (4) logarithmic standard deviation of between
 event residuals at the period of ip.

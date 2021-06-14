@@ -24,7 +24,7 @@
 #' @param Vs30_code Code for Vs30 measurement. 0 for measured Vs30; 1 for inferred Vs30
 #' @param region Region indicator: 0 for global; 1 for California; 2 for Japan; 3 for China;
 #' 4 for Italy; 5 for Turkey; 6 for Taiwan.
-#' @return A list of five elements is returned: med - median spectral acceleration prediction;
+#' @return A list of five elements is returned: med - median spectral acceleration prediction (in g);
 #' sigma - logarithmic standard deviation of spectral acceleration prediction; phi - logarithmic
 #' standard deviation of within event residuals; tau - logarithmic standard deviation of between
 #' event residuals; period - the corresponding oscillator periods
@@ -57,7 +57,7 @@ ask_2014_nga <- function (M, T = 1000, CRjb = 999.9, Rrup, Rjb, Rx, Ry0 = 999, Z
     ifelse (region == 2, Z10 <- exp(-5.23 / 2 * log((Vs30^2 + 412^2) / (1360^2 + 412^2))) / 1000,
             Z10 <- exp((-7.67 / 4) * log((Vs30^4 + 610^4) / (1360^4 + 610^4))) / 1000)
 
-  if (length(T) == 1 & T == 1000) {
+  if (length(T) == 1 & T[1] == 1000) {
 
     # use pre-defined period
     Sa = rep(0, length(period))
@@ -117,16 +117,16 @@ ask_2014_nga <- function (M, T = 1000, CRjb = 999.9, Rrup, Rjb, Rx, Ry0 = 999, Z
                                         HW, W, Z10, Vs30, Vs30_code, region, CRjb)
 
         Sa[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[1]), log(res_high[1])),
-                           xout = log(Ti)))
+                           xout = log(Ti))$y)
 
         Sigma[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[2]), log(res_high[2])),
-                              xout = log(Ti)))
+                              xout = log(Ti))$y)
 
         Phi[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[3]), log(res_high[3])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
         Tau[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[4]), log(res_high[4])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
       } else {
 
@@ -190,7 +190,7 @@ ask_2014_nga <- function (M, T = 1000, CRjb = 999.9, Rrup, Rjb, Rx, Ry0 = 999, Z
 #' @param region Region indicator: 0 for global; 1 for California; 2 for Japan; 3 for China;
 #' 4 for Italy; 5 for Turkey; 6 for Taiwan.
 #' @param CRjb Centroid CRjb, assumed to be 999.9 here -> assume no aftershock
-#' @return An array of four values: (1) median spectral acceleration prediction; (2)
+#' @return An array of four values: (1) median spectral acceleration prediction (in g); (2)
 #' logarithmic standard deviation of spectral acceleration prediction; (3) logarithmic
 #' standard deviation of within event residuals; and (4) logarithmic standard deviation of between
 #' event residuals at the period of ip.

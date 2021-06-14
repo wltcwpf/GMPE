@@ -36,7 +36,7 @@ projection of rupture plane}
 \item{Vs30}{Shear wave velocity averaged over top 30 m (in m/s)}
 
 \item{return.type}{The indicator specifies which type of data return:
-1 for the med/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
+1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr}
 }
 \value{

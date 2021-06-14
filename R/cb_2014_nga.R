@@ -21,7 +21,7 @@
 #' @param Zhyp Hypocentral depth of the earthquake measured from sea level. 999 in unknown
 #' @param region Region indicator: 0 for global (incl. Taiwan); 1 for California; 2 for Japan;
 #' 3 for China or Turkey; 4 for Italy
-#' @return A list of five elements is returned: med - median spectral acceleration prediction;
+#' @return A list of five elements is returned: med - median spectral acceleration prediction (in g);
 #' sigma - logarithmic standard deviation of spectral acceleration prediction; phi - logarithmic
 #' standard deviation of within event residuals; tau - logarithmic standard deviation of between
 #' event residuals; period - the corresponding oscillator periods
@@ -83,7 +83,7 @@ cb_2014_nga <- function(M, T = 1000, Rrup, Rjb, Rx, W = 999, Ztor = 999, Zbot, d
   }
 
   # Compute Sa and sigma with pre-defined period
-  if (length(T) == 1 & T == 1000) {
+  if (length(T) == 1 & T[1] == 1000) {
 
     Sa = rep(0, length(period))
 
@@ -151,16 +151,16 @@ cb_2014_nga <- function(M, T = 1000, Rrup, Rjb, Rx, W = 999, Ztor = 999, Zbot, d
                                       Frv, Fnm, region, A1100)
 
         Sa[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[1]), log(res_high[1])),
-                           xout = log(Ti)))
+                           xout = log(Ti))$y)
 
         Sigma[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[2]), log(res_high[2])),
-                              xout = log(Ti)))
+                              xout = log(Ti))$y)
 
         Phi[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[3]), log(res_high[3])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
         Tau[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[4]), log(res_high[4])),
-                            xout = log(Ti)))
+                            xout = log(Ti))$y)
 
         if (Sa[i] < res_PGA[1] & Ti < 0.25 & Ti > 0)
           Sa[i] = res_PGA[1]
@@ -231,7 +231,7 @@ cb_2014_nga <- function(M, T = 1000, Rrup, Rjb, Rx, W = 999, Ztor = 999, Zbot, d
 #' @param region Region indicator: 0 for global (incl. Taiwan); 1 for California; 2 for Japan;
 #' 3 for China or Turkey; 4 for Italy
 #' @param A1100 Median estimated value of PGA on rock with Vs30 = 1100m/s. 999 if unknown
-#' @return An array of four values: (1) median spectral acceleration prediction; (2)
+#' @return An array of four values: (1) median spectral acceleration prediction (in g); (2)
 #' logarithmic standard deviation of spectral acceleration prediction; (3) logarithmic
 #' standard deviation of within event residuals; and (4) logarithmic standard deviation of between
 #' event residuals at the period of ip.

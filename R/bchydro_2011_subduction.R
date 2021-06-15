@@ -53,10 +53,9 @@ bchydro_2011 <- function(M, T = 1000, Vs30, Rrup, Rhypo, Ftype, faba, depth, fla
 }
 
 
-#' The subroutine of BCHydro 2011 for subduction earthquakes
-#'
-#' This is a subroutine function of BCHydro 2011. Run bchydro_2011() for prediction.
 BCHydro_2011_subroutine <- function(M, Vs30, T, Rrup, Rhypo, Ftype, faba, depth, flag_deltaC1, PGA_rock){
+
+  # The subroutine of BCHydro 2011 for subduction earthquakes
 
   # for the given period T, get the index for the constants
   period = c(0.0,0.02,0.05,0.075,0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.6,0.75,
@@ -172,12 +171,9 @@ BCHydro_2011_subroutine <- function(M, Vs30, T, Rrup, Rhypo, Ftype, faba, depth,
 }
 
 
-#' The distance subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 calculates distance scaling base model
-#' with R term - either Rupture Distance (Interface events) of Hypocentral distance (Intraslab events).
-#' DO NOT Run it. See bchydro_2011() for prediction.
 D_term <- function(M, Rrup, Rhypo, Ftype, V){
+  # The distance subroutine function of BCHydro 2011 for subduction earthquakes
+
   # Notice: input argument V is a list
   if(Ftype == 0){
     R = Rrup + V$c4*exp((M-6.0)*V$a9)
@@ -190,11 +186,10 @@ D_term <- function(M, Rrup, Rhypo, Ftype, V){
 }
 
 
-#' The magnitude subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 calculates magnitude scaling term.
-#' DO NOT Run it. See bchydro_2011() for prediction.
 M_term <- function(M, V){
+
+  # The magnitude subroutine function of BCHydro 2011 for subduction earthquakes
+
   testmag = (7.8 + V$DeltaC1)
   if(M < testmag){
     MTerm = V$a4*(M-testmag) + V$a13*(10.0-M)^2
@@ -204,22 +199,20 @@ M_term <- function(M, V){
   return(MTerm)
 }
 
-#' The depth subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 calculates depth scaling term.
-#' DO NOT Run it. See bchydro_2011() for prediction.
 Depth_term <- function(depth, Ftype, V){
+
+  # The depth subroutine function of BCHydro 2011 for subduction earthquakes
+
   # Notice: input argument V is a list
   DepthTerm = V$a11*(depth - 60.0)*Ftype
   return(DepthTerm)
 }
 
 
-#' The arc effect subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 calculates Forearc/Backarc scaling term.
-#' DO NOT Run it. See bchydro_2011() for prediction.
 Arc_term <- function(Rrup, Rhypo, faba, Ftype, V){
+
+  # The arc effect subroutine function of BCHydro 2011 for subduction earthquakes
+
   # Notice: input argument V is a list
   if(Ftype == 1){
     ArcTerm = (V$a7 + V$a8*log((max(Rhypo, 85.0)/40.0)))*faba
@@ -229,11 +222,10 @@ Arc_term <- function(Rrup, Rhypo, faba, Ftype, V){
   return(ArcTerm)
 }
 
-#' The site effect subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 calculates site response term.
-#' DO NOT Run it. See bchydro_2011() for prediction.
 Site_term <- function(Vs30,PGA_rock,V){
+
+  # The site effect subroutine function of BCHydro 2011 for subduction earthquakes
+
   # Notice: input argument V is a list
   if(Vs30 > 1000.0){
     VsStar = 1000.0
@@ -250,11 +242,10 @@ Site_term <- function(Vs30,PGA_rock,V){
 }
 
 
-#' The subroutine function of BCHydro 2011 for PGA for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 predicts for PGA.
-#' DO NOT Run it. See bchydro_2011() for prediction.
 calc_val <- function(M, Rrup, Rhypo, PGA_rock, Vs30, Ftype, faba, depth, V){
+
+  # The subroutine function of BCHydro 2011 for PGA for subduction earthquakes
+
   # Notice: input argument V is a list
   # calculate predicted value
   # Compute the R term and base model based on either Rupture Distance (Interface events)
@@ -269,11 +260,10 @@ calc_val <- function(M, Rrup, Rhypo, PGA_rock, Vs30, Ftype, faba, depth, V){
   return(X)
 }
 
-#' The subroutine function of BCHydro 2011 for PSA for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 predicts for PSA (other than PGA).
-#' DO NOT Run it. See bchydro_2011() for prediction.
 calc_val2 <- function(M, Rrup, Rhypo, PGA_rock, Vs30, Ftype, faba, depth, V){
+
+  # The subroutine function of BCHydro 2011 for PSA for subduction earthquakes
+
   # Notice: input argument V is a list
   # calculate predicted value
   # Compute the R term and base model based on
@@ -289,12 +279,10 @@ calc_val2 <- function(M, Rrup, Rhypo, PGA_rock, Vs30, Ftype, faba, depth, V){
   return(X)
 }
 
-
-#' The constant terms subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 gets constant terms.
-#' DO NOT Run it. See bchydro_2011() for prediction.
 get_BCHydro_constants <- function(index, flag_deltaC1){
+
+  # The constant terms subroutine function of BCHydro 2011 for subduction earthquakes
+
   ##### return a list
   # get relevant constants
   # arrays with values by index
@@ -412,11 +400,10 @@ get_BCHydro_constants <- function(index, flag_deltaC1){
   return(constants)  # return a list
 }
 
-#' The constant terms subroutine function of BCHydro 2011 for Vs760 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 gets constant term for the reference site with
-#' Vs30 = 760 m/s. DO NOT Run it. See bchydro_2011() for prediction.
 get_BCHydro_constants_760 <- function(index_760){
+
+  # The constant terms subroutine function of BCHydro 2011 for Vs760 for subduction earthquakes
+
   # return a list
   # get relevant constants for computing the amplification factors
   # arrays with values by index
@@ -453,11 +440,10 @@ get_BCHydro_constants_760 <- function(index_760){
   return(constants760)
 }
 
-#' The amplifcation subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 calculates amplifcation factors.
-#' DO NOT Run it. See bchydro_2011() for prediction.
 BCHHR2Vs760 <- function(T_760,LSa_noamp){
+
+  # The amplifcation subroutine function of BCHydro 2011 for subduction earthquakes
+
   # Now compute the amp factor based on the given hard rock spectral acceleration.
   period_2Vs760 = c(0.00,0.01,0.02,0.03,0.05,0.075,0.1,0.15,0.2,0.3,0.5,1.00,2.00,3.3,5.0,10.00)
   # Find the requested spectral period and corresponding coefficients
@@ -513,12 +499,10 @@ BCHHR2Vs760 <- function(T_760,LSa_noamp){
   return(AmpFac)
 }
 
-
-#' The sigma subroutine function of BCHydro 2011 for subduction earthquakes
-#'
-#' This subroutine function of BCHydro 2011 estimates model uncertainty (standard deviation)
-#' terms. DO NOT Run it. See bchydro_2011() for prediction.
 BCHydro_sigma <- function(V){
+
+  # The sigma subroutine function of BCHydro 2011 for subduction earthquakes
+
   # return a lit
   # calculate the sigma
   # use the published coefficients for the geometric mean

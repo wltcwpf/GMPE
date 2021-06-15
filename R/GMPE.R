@@ -1,0 +1,25 @@
+#' Ground Motion Prediction Equations package
+#'
+#' This package contains five NGA-West2 Models (ASK14, BSSA14, CB14, CY14, and I14)
+#' for crustal earthquakes; and four (BC Hyrdo 2011 + 2018, Zhao et al 2016, Parker
+#' et al 2020 NGA-Subduction) for subduction earthquakes.
+#' A shallow crustal or upper mantle earthquake model by Zhao et al (2017) is also included.
+#'
+#' @docType package
+#'
+#' @name GMPE-package
+#' @aliases GMPE GMPE-package
+#'
+#' @note There are 11 GMPE functions:
+#' \code{ask_2014_nga, bssa_2014_nga, cb_2014_nga, cy_2014_nga, i_2014_nga,
+#' zea_2016_SC_UM, zea_2016_Sub_Interf, zea_2016_Sub_Slab, bchydro_2011,
+#' bchydro_2018, pea_2020_ngasub}
+#'
+#' @examples
+#' ## Not run:
+#' ##   See examples in the help files for all functions.
+#' ## End(Not run)
+#'
+#' @author Pengfei Wang
+NULL
+#> NULL

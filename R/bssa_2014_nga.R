@@ -138,28 +138,28 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         F_dz1_temp <- c(F_dz1_low, F_dz1_high)
         PGAr_temp <- c(log(PGAr_low), log(PGAr_high))
 
-        temp_med <- approx(x, Y_sa, log(Ti))$y
+        temp_med <- approx(x, Y_sa, log(Ti), rule = 2)$y
         med[i] = exp(temp_med$y)    # linear interpolation
-        temp_sig <- approx(x, Y_sigma, log(Ti))$y
+        temp_sig <- approx(x, Y_sigma, log(Ti), rule = 2)$y
         sig[i] <- temp_sig$y
-        temp_phi <- approx(x, Y_phi, log(Ti))$y
+        temp_phi <- approx(x, Y_phi, log(Ti), rule = 2)$y
         phi[i] <- temp_phi$y
-        temp_tau <- approx(x, Y_tau, log(Ti))$y
+        temp_tau <- approx(x, Y_tau, log(Ti), rule = 2)$y
         tau[i] <- temp_tau$y
 
-        FE_med <- approx(x, FE_temp, log(Ti))$y
-        FP_med <- approx(x, FP_temp, log(Ti))$y
-        FS_med <- approx(x, FS_temp, log(Ti))$y
+        FE_med <- approx(x, FE_temp, log(Ti), rule = 2)$y
+        FP_med <- approx(x, FP_temp, log(Ti), rule = 2)$y
+        FS_med <- approx(x, FS_temp, log(Ti), rule = 2)$y
         F_E[i] <- FE_med$y
         F_P[i] <- FP_med$y
         F_S[i] <- FS_med$y
 
-        r_med <- approx(x, r_temp, log(Ti))$y
-        ln_Flin_med <- approx(x, ln_Flin_temp, log(Ti))$y
-        ln_Fnlin_med <- approx(x, ln_Fnlin_temp, log(Ti))$y
-        f2_med <- approx(x, f2_temp, log(Ti))$y
-        F_dz1_med <- approx(x, F_dz1_temp, log(Ti))$y
-        PGAr_med <- approx(x, PGAr_temp, log(Ti))$y
+        r_med <- approx(x, r_temp, log(Ti), rule = 2)$y
+        ln_Flin_med <- approx(x, ln_Flin_temp, log(Ti), rule = 2)$y
+        ln_Fnlin_med <- approx(x, ln_Fnlin_temp, log(Ti), rule = 2)$y
+        f2_med <- approx(x, f2_temp, log(Ti), rule = 2)$y
+        F_dz1_med <- approx(x, F_dz1_temp, log(Ti), rule = 2)$y
+        PGAr_med <- approx(x, PGAr_temp, log(Ti), rule = 2)$y
         r[i] <- r_med$y
         ln_Flin[i] <- ln_Flin_med$y
         ln_Fnlin[i] <- ln_Fnlin_med$y

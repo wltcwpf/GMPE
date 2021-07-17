@@ -83,16 +83,16 @@ i_2014_nga <- function(M, Vs30, T = 1000, Rrup, Fault_Type) {
         res_high <- i_2014_subroutine(M, ip_high, Rrup, Vs30, Fault_Type)
 
         Sa[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[1]), log(res_high[1])),
-                           xout = log(Ti))$y)
+                           xout = log(Ti), rule = 2)$y)
 
         Sigma[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[2]), log(res_high[2])),
-                              xout = log(Ti))$y)
+                              xout = log(Ti), rule = 2)$y)
 
         Phi[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[3]), log(res_high[3])),
-                            xout = log(Ti))$y)
+                            xout = log(Ti), rule = 2)$y)
 
         Tau[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[4]), log(res_high[4])),
-                            xout = log(Ti))$y)
+                            xout = log(Ti), rule = 2)$y)
 
       } else {
 

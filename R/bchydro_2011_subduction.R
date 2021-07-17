@@ -129,7 +129,7 @@ BCHydro_2011_subroutine <- function(M, Vs30, T, Rrup, Rhypo, Ftype, faba, depth,
         x = c(T_low, T_hi)
         Y_sa = c(log(sa_low), log(sa_hi))
 
-        Sa_noamp[it] = exp(approx(x = x, y = Y_sa, xout = Teach)$y)
+        Sa_noamp[it] = exp(approx(x = x, y = Y_sa, xout = Teach, rule = 2)$y)
         LSa_noamp[it] = log(Sa_noamp[it])
         AmpFac = BCHHR2Vs760(T[it], LSa_noamp[it])
         # Sa[index] = Sa_noamp[index] + AmpFac + 6.89
@@ -465,11 +465,11 @@ BCHHR2Vs760 <- function(T_760,LSa_noamp){
     C1_constants = c(V760_low$c1_2Vs760, V760_hi$c1_2Vs760)
     C2_constants = c(V760_low$c2_2Vs760, V760_hi$c2_2Vs760)
 
-    b1_2Vs760 = approx(x = X_period760, y = B1_constants, xout = period1_760)$y   ## V760 is a list
-    b2_2Vs760 = approx(x = X_period760, y = B2_constants, xout = period1_760)$y
-    b3_2Vs760 = approx(x = X_period760, y = B3_constants, xout = period1_760)$y
-    c1_2Vs760 = approx(x = X_period760, y = C1_constants, xout = period1_760)$y
-    c2_2Vs760 = approx(x = X_period760, y = C2_constants, xout = period1_760)$y
+    b1_2Vs760 = approx(x = X_period760, y = B1_constants, xout = period1_760, rule = 2)$y   ## V760 is a list
+    b2_2Vs760 = approx(x = X_period760, y = B2_constants, xout = period1_760, rule = 2)$y
+    b3_2Vs760 = approx(x = X_period760, y = B3_constants, xout = period1_760, rule = 2)$y
+    c1_2Vs760 = approx(x = X_period760, y = C1_constants, xout = period1_760, rule = 2)$y
+    c2_2Vs760 = approx(x = X_period760, y = C2_constants, xout = period1_760, rule = 2)$y
 
     V760 <- list()  ## make V760 as a list
     V760$b1_2Vs760 <- b1_2Vs760

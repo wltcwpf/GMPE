@@ -129,29 +129,29 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
 
         Res_sigma$period <- period
 
-        Res_sigma$Tau <- approx( periods, c( Res_sigma_low$Tau, Res_sigma_high$Tau ), log( period ) )$y
+        Res_sigma$Tau <- approx( periods, c( Res_sigma_low$Tau, Res_sigma_high$Tau ), log( period ), rule = 2 )$y
 
-        Res_sigma$Phi_total <- approx( periods, c( Res_sigma_low$Phi_total, Res_sigma_high$Phi_total ), log( period ) )$y
+        Res_sigma$Phi_total <- approx( periods, c( Res_sigma_low$Phi_total, Res_sigma_high$Phi_total ), log( period ), rule = 2 )$y
 
-        Res_sigma$Phi_SS <- approx( periods, c( Res_sigma_low$Phi_SS, Res_sigma_high$Phi_SS ), log( period ) )$y
+        Res_sigma$Phi_SS <- approx( periods, c( Res_sigma_low$Phi_SS, Res_sigma_high$Phi_SS ), log( period ), rule = 2 )$y
 
-        Res_sigma$PhiS2S <- approx( periods, c( Res_sigma_low$PhiS2S, Res_sigma_high$PhiS2S ), log( period ) )$y
+        Res_sigma$PhiS2S <- approx( periods, c( Res_sigma_low$PhiS2S, Res_sigma_high$PhiS2S ), log( period ), rule = 2 )$y
 
-        Res_sigma$Phi_partitioned <- approx( periods, c( Res_sigma_low$Phi_partitioned, Res_sigma_high$Phi_partitioned ), log( period ) )$y
+        Res_sigma$Phi_partitioned <- approx( periods, c( Res_sigma_low$Phi_partitioned, Res_sigma_high$Phi_partitioned ), log( period ), rule = 2 )$y
 
-        Res_sigma$Sigma_total <- approx( periods, c( Res_sigma_low$Sigma_total, Res_sigma_high$Sigma_total ), log( period ) )$y
+        Res_sigma$Sigma_total <- approx( periods, c( Res_sigma_low$Sigma_total, Res_sigma_high$Sigma_total ), log( period ), rule = 2 )$y
 
-        Res_sigma$Sigma_partitioned <- approx( periods, c( Res_sigma_low$Sigma_partitioned, Res_sigma_high$Sigma_partitioned ), log( period ) )$y
+        Res_sigma$Sigma_partitioned <- approx( periods, c( Res_sigma_low$Sigma_partitioned, Res_sigma_high$Sigma_partitioned ), log( period ), rule = 2 )$y
 
-        Res_sigma$Mu <- approx( periods, c( Res_sigma_low$Mu, Res_sigma_high$Mu ), log( period ) )$y
+        Res_sigma$Mu <- approx( periods, c( Res_sigma_low$Mu, Res_sigma_high$Mu ), log( period ), rule = 2 )$y
 
-        Res_sigma$Flin <- approx( periods, c( Res_sigma_low$Flin, Res_sigma_high$Flin ), log( period ) )$y
+        Res_sigma$Flin <- approx( periods, c( Res_sigma_low$Flin, Res_sigma_high$Flin ), log( period ), rule = 2 )$y
 
-        Res_sigma$Fnl <- approx( periods, c( Res_sigma_low$Fnl, Res_sigma_high$Fnl ), log( period ) )$y
+        Res_sigma$Fnl <- approx( periods, c( Res_sigma_low$Fnl, Res_sigma_high$Fnl ), log( period ), rule = 2 )$y
 
-        Res_sigma$Rock <- approx( periods, c( Res_sigma_low$Rock, Res_sigma_high$Rock ), log( period ) )$y
+        Res_sigma$Rock <- approx( periods, c( Res_sigma_low$Rock, Res_sigma_high$Rock ), log( period ), rule = 2 )$y
 
-        Res_sigma$Epi <- approx( periods, c( Res_sigma_low$Epi, Res_sigma_high$Epi ), log( period ) )$y
+        Res_sigma$Epi <- approx( periods, c( Res_sigma_low$Epi, Res_sigma_high$Epi ), log( period ), rule = 2 )$y
 
       }else{  # no need interpolation
 
@@ -224,29 +224,29 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
 
         Res_sigma$period <- period
 
-        Res_sigma$Tau <- approx( periods, c( Res_sigma_low$Tau, Res_sigma_high$Tau ), log( period ) )$y
+        Res_sigma$Tau <- approx( periods, c( Res_sigma_low$Tau, Res_sigma_high$Tau ), log( period ), rule = 2 )$y
 
-        Res_sigma$Phi_total <- approx( periods, c( Res_sigma_low$Phi_total, Res_sigma_high$Phi_total ), log( period ) )$y
+        Res_sigma$Phi_total <- approx( periods, c( Res_sigma_low$Phi_total, Res_sigma_high$Phi_total ), log( period ), rule = 2 )$y
 
-        Res_sigma$Phi_SS <- approx( periods, c( Res_sigma_low$Phi_SS, Res_sigma_high$Phi_SS ), log( period ) )$y
+        Res_sigma$Phi_SS <- approx( periods, c( Res_sigma_low$Phi_SS, Res_sigma_high$Phi_SS ), log( period ), rule = 2 )$y
 
-        Res_sigma$PhiS2S <- approx( periods, c( Res_sigma_low$PhiS2S, Res_sigma_high$PhiS2S ), log( period ) )$y
+        Res_sigma$PhiS2S <- approx( periods, c( Res_sigma_low$PhiS2S, Res_sigma_high$PhiS2S ), log( period ), rule = 2 )$y
 
-        Res_sigma$Phi_partitioned <- approx( periods, c( Res_sigma_low$Phi_partitioned, Res_sigma_high$Phi_partitioned ), log( period ) )$y
+        Res_sigma$Phi_partitioned <- approx( periods, c( Res_sigma_low$Phi_partitioned, Res_sigma_high$Phi_partitioned ), log( period ), rule = 2 )$y
 
-        Res_sigma$Sigma_total <- approx( periods, c( Res_sigma_low$Sigma_total, Res_sigma_high$Sigma_total ), log( period ) )$y
+        Res_sigma$Sigma_total <- approx( periods, c( Res_sigma_low$Sigma_total, Res_sigma_high$Sigma_total ), log( period ), rule = 2 )$y
 
-        Res_sigma$Sigma_partitioned <- approx( periods, c( Res_sigma_low$Sigma_partitioned, Res_sigma_high$Sigma_partitioned ), log( period ) )$y
+        Res_sigma$Sigma_partitioned <- approx( periods, c( Res_sigma_low$Sigma_partitioned, Res_sigma_high$Sigma_partitioned ), log( period ), rule = 2 )$y
 
-        Res_sigma$Mu <- approx( periods, c( Res_sigma_low$Mu, Res_sigma_high$Mu ), log( period ) )$y
+        Res_sigma$Mu <- approx( periods, c( Res_sigma_low$Mu, Res_sigma_high$Mu ), log( period ), rule = 2 )$y
 
-        Res_sigma$Flin <- approx( periods, c( Res_sigma_low$Flin, Res_sigma_high$Flin ), log( period ) )$y
+        Res_sigma$Flin <- approx( periods, c( Res_sigma_low$Flin, Res_sigma_high$Flin ), log( period ), rule = 2 )$y
 
-        Res_sigma$Fnl <- approx( periods, c( Res_sigma_low$Fnl, Res_sigma_high$Fnl ), log( period ) )$y
+        Res_sigma$Fnl <- approx( periods, c( Res_sigma_low$Fnl, Res_sigma_high$Fnl ), log( period ), rule = 2 )$y
 
-        Res_sigma$Rock <- approx( periods, c( Res_sigma_low$Rock, Res_sigma_high$Rock ), log( period ) )$y
+        Res_sigma$Rock <- approx( periods, c( Res_sigma_low$Rock, Res_sigma_high$Rock ), log( period ), rule = 2 )$y
 
-        Res_sigma$Epi <- approx( periods, c( Res_sigma_low$Epi, Res_sigma_high$Epi ), log( period ) )$y
+        Res_sigma$Epi <- approx( periods, c( Res_sigma_low$Epi, Res_sigma_high$Epi ), log( period ), rule = 2 )$y
 
       }else{  # no need interpolation
 

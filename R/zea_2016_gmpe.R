@@ -396,15 +396,15 @@ zea_2016_SC_UM <- function(mag, T = 1000, fDepth, dist, DistV,
 
   } else {
 
-    SpeCalLog <- approx(x = period, y = SpeCalLog, xout = T)$y
+    SpeCalLog <- approx(x = period, y = SpeCalLog, xout = T, rule = 2)$y
 
-    RockSpeCalLog <- approx(x = period, y = RockSpeCalLog, xout = T)$y
+    RockSpeCalLog <- approx(x = period, y = RockSpeCalLog, xout = T, rule = 2)$y
 
-    SiteAmpCalLog <- approx(x = period, y = SiteAmpCalLog, xout = T)$y
+    SiteAmpCalLog <- approx(x = period, y = SiteAmpCalLog, xout = T, rule = 2)$y
 
-    SigmaT <- approx(x = period, y = SigmaT, xout = T)$y
+    SigmaT <- approx(x = period, y = SigmaT, xout = T, rule = 2)$y
 
-    sigmaSS <- approx(x = period, y = sigmaSS, xout = T)$y
+    sigmaSS <- approx(x = period, y = sigmaSS, xout = T, rule = 2)$y
   }
 
   # output
@@ -807,15 +807,15 @@ zea_2016_Sub_Interf <- function(mag, T = 1000, fDepth, dist, DistV, SiteClass){
 
   } else {
 
-    SpeCalLog <- approx(x = period, y = SpeCalLog, xout = T)$y
+    SpeCalLog <- approx(x = period, y = SpeCalLog, xout = T, rule = 2)$y
 
-    RockSpeCalLog <- approx(x = period, y = RockSpeCalLog, xout = T)$y
+    RockSpeCalLog <- approx(x = period, y = RockSpeCalLog, xout = T, rule = 2)$y
 
-    SiteAmpCalLog <- approx(x = period, y = SiteAmpCalLog, xout = T)$y
+    SiteAmpCalLog <- approx(x = period, y = SiteAmpCalLog, xout = T, rule = 2)$y
 
-    SigmaT <- approx(x = period, y = SigmaT, xout = T)$y
+    SigmaT <- approx(x = period, y = SigmaT, xout = T, rule = 2)$y
 
-    sigmaSS <- approx(x = period, y = sigmaSS, xout = T)$y
+    sigmaSS <- approx(x = period, y = sigmaSS, xout = T, rule = 2)$y
   }
 
   # output
@@ -1181,15 +1181,15 @@ zea_2016_Sub_Slab <- function(mag, T = 1000, fDepth, dist, DistV, SiteClass){
 
   } else {
 
-    SpeCalLog <- approx(x = period, y = SpeCalLog, xout = T)$y
+    SpeCalLog <- approx(x = period, y = SpeCalLog, xout = T, rule = 2)$y
 
-    RockSpeCalLog <- approx(x = period, y = RockSpeCalLog, xout = T)$y
+    RockSpeCalLog <- approx(x = period, y = RockSpeCalLog, xout = T, rule = 2)$y
 
-    SiteAmpCalLog <- approx(x = period, y = SiteAmpCalLog, xout = T)$y
+    SiteAmpCalLog <- approx(x = period, y = SiteAmpCalLog, xout = T, rule = 2)$y
 
-    SigmaT <- approx(x = period, y = SigmaT, xout = T)$y
+    SigmaT <- approx(x = period, y = SigmaT, xout = T, rule = 2)$y
 
-    sigmaSS <- approx(x = period, y = sigmaSS, xout = T)$y
+    sigmaSS <- approx(x = period, y = sigmaSS, xout = T, rule = 2)$y
   }
 
   # output

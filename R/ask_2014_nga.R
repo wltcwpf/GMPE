@@ -117,16 +117,16 @@ ask_2014_nga <- function (M, T = 1000, CRjb = 999.9, Rrup, Rjb, Rx, Ry0 = 999, Z
                                         HW, W, Z10, Vs30, Vs30_code, region, CRjb)
 
         Sa[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[1]), log(res_high[1])),
-                           xout = log(Ti))$y)
+                           xout = log(Ti), rule = 2)$y)
 
         Sigma[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[2]), log(res_high[2])),
-                              xout = log(Ti))$y)
+                              xout = log(Ti), rule = 2)$y)
 
         Phi[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[3]), log(res_high[3])),
-                            xout = log(Ti))$y)
+                            xout = log(Ti), rule = 2)$y)
 
         Tau[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[4]), log(res_high[4])),
-                            xout = log(Ti))$y)
+                            xout = log(Ti), rule = 2)$y)
 
       } else {
 

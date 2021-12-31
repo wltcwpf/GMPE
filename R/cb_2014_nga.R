@@ -150,17 +150,17 @@ cb_2014_nga <- function(M, T = 1000, Rrup, Rjb, Rx, W = 999, Ztor = 999, Zbot, d
         res_PGA <- cb_2014_subroutine(M, 22, Rrup, Rjb, Rx, W, Ztor, Zbot, dip, Fhw, Vs30, Z25, Zhyp, lambda,
                                       Frv, Fnm, region, A1100)
 
-        Sa[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[1]), log(res_high[1])),
-                           xout = log(Ti), rule = 2)$y)
+        Sa[i] = approx(x = c(T_low, T_high), y = c(res_low[1], res_high[1]),
+                           xout = Ti, rule = 2)$y
 
-        Sigma[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[2]), log(res_high[2])),
-                              xout = log(Ti), rule = 2)$y)
+        Sigma[i] = approx(x = c(T_low, T_high), y = c(res_low[2], res_high[2]),
+                              xout = log(Ti), rule = 2)$y
 
-        Phi[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[3]), log(res_high[3])),
-                            xout = log(Ti), rule = 2)$y)
+        Phi[i] = approx(x = c(T_low, T_high), y = c(res_low[3], res_high[3]),
+                            xout = Ti, rule = 2)$y
 
-        Tau[i] = exp(approx(x = c(log(T_low), log(T_high)), y = c(log(res_low[4]), log(res_high[4])),
-                            xout = log(Ti), rule = 2)$y)
+        Tau[i] = approx(x = c(T_low, T_high), y = c(res_low[4], res_high[4]),
+                            xout = Ti, rule = 2)$y
 
         if (Sa[i] < res_PGA[1] & Ti < 0.25 & Ti > 0)
           Sa[i] = res_PGA[1]

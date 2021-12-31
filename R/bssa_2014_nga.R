@@ -123,8 +123,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         F_dz1_high <- res_high3$F_dz1
         PGAr_high <- res_high3$PGAr
 
-        x = c(log(T_low),log(T_high))
-        Y_sa = c(log(Sa_low),log(Sa_high))
+        x = c(T_low,T_high)
+        Y_sa = c(Sa_low,Sa_high)
         Y_sigma = c(sigma_low,sigma_high)
         Y_phi <- c(phi_low, phi_high)
         Y_tau <- c(tau_low, tau_high)
@@ -138,34 +138,34 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         F_dz1_temp <- c(F_dz1_low, F_dz1_high)
         PGAr_temp <- c(log(PGAr_low), log(PGAr_high))
 
-        temp_med <- approx(x, Y_sa, log(Ti), rule = 2)$y
-        med[i] = exp(temp_med$y)    # linear interpolation
-        temp_sig <- approx(x, Y_sigma, log(Ti), rule = 2)$y
-        sig[i] <- temp_sig$y
-        temp_phi <- approx(x, Y_phi, log(Ti), rule = 2)$y
-        phi[i] <- temp_phi$y
-        temp_tau <- approx(x, Y_tau, log(Ti), rule = 2)$y
-        tau[i] <- temp_tau$y
+        temp_med <- approx(x, Y_sa, Ti, rule = 2)$y
+        med[i] = temp_med    # linear interpolation
+        temp_sig <- approx(x, Y_sigma, Ti, rule = 2)$y
+        sig[i] <- temp_sig
+        temp_phi <- approx(x, Y_phi, Ti, rule = 2)$y
+        phi[i] <- temp_phi
+        temp_tau <- approx(x, Y_tau, Ti, rule = 2)$y
+        tau[i] <- temp_tau
 
-        FE_med <- approx(x, FE_temp, log(Ti), rule = 2)$y
-        FP_med <- approx(x, FP_temp, log(Ti), rule = 2)$y
-        FS_med <- approx(x, FS_temp, log(Ti), rule = 2)$y
-        F_E[i] <- FE_med$y
-        F_P[i] <- FP_med$y
-        F_S[i] <- FS_med$y
+        FE_med <- approx(x, FE_temp, Ti, rule = 2)$y
+        FP_med <- approx(x, FP_temp, Ti, rule = 2)$y
+        FS_med <- approx(x, FS_temp, Ti, rule = 2)$y
+        F_E[i] <- FE_med
+        F_P[i] <- FP_med
+        F_S[i] <- FS_med
 
-        r_med <- approx(x, r_temp, log(Ti), rule = 2)$y
-        ln_Flin_med <- approx(x, ln_Flin_temp, log(Ti), rule = 2)$y
-        ln_Fnlin_med <- approx(x, ln_Fnlin_temp, log(Ti), rule = 2)$y
-        f2_med <- approx(x, f2_temp, log(Ti), rule = 2)$y
-        F_dz1_med <- approx(x, F_dz1_temp, log(Ti), rule = 2)$y
-        PGAr_med <- approx(x, PGAr_temp, log(Ti), rule = 2)$y
-        r[i] <- r_med$y
-        ln_Flin[i] <- ln_Flin_med$y
-        ln_Fnlin[i] <- ln_Fnlin_med$y
-        f2[i] <- f2_med$y
-        F_dz1[i] <- F_dz1_med$y
-        PGAr[i] <- exp(PGAr_med$y)
+        r_med <- approx(x, r_temp, Ti, rule = 2)$y
+        ln_Flin_med <- approx(x, ln_Flin_temp, Ti, rule = 2)$y
+        ln_Fnlin_med <- approx(x, ln_Fnlin_temp, Ti, rule = 2)$y
+        f2_med <- approx(x, f2_temp, Ti, rule = 2)$y
+        F_dz1_med <- approx(x, F_dz1_temp, Ti, rule = 2)$y
+        PGAr_med <- approx(x, PGAr_temp, Ti, rule = 2)$y
+        r[i] <- r_med
+        ln_Flin[i] <- ln_Flin_med
+        ln_Fnlin[i] <- ln_Fnlin_med
+        f2[i] <- f2_med
+        F_dz1[i] <- F_dz1_med
+        PGAr[i] <- exp(PGAr_med)
 
       }else{
         ip_T = which(abs((period- Ti)) < 0.0001)

@@ -127,9 +127,9 @@ BCHydro_2011_subroutine <- function(M, Vs30, T, Rrup, Rhypo, Ftype, faba, depth,
         sa_hi = exp(calc_val2(M, Rrup, Rhypo, PGA_rock, Vs30, Ftype, faba, depth, V_hi))
 
         x = c(T_low, T_hi)
-        Y_sa = c(log(sa_low), log(sa_hi))
+        Y_sa = c(sa_low, sa_hi)
 
-        Sa_noamp[it] = exp(approx(x = x, y = Y_sa, xout = Teach, rule = 2)$y)
+        Sa_noamp[it] = approx(x = x, y = Y_sa, xout = Teach, rule = 2)$y
         LSa_noamp[it] = log(Sa_noamp[it])
         AmpFac = BCHHR2Vs760(T[it], LSa_noamp[it])
         # Sa[index] = Sa_noamp[index] + AmpFac + 6.89

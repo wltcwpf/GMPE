@@ -152,7 +152,7 @@ bchydro_2018 <- function(M, T = 1000, Rrup, Rhypo, F_faba, Vs30, F_event, Zh){
     # handle with periods other than pre-defined periods
     I = (T <= 0.01) # <= 0.01 s
 
-    sa_int = approx(log(c(1e-10, period[-1])), sa, log(T), rule = 2)$y
+    sa_int = approx(c(1e-10, period[-1]), sa, T, rule = 2)$y
 
     sa_int[I] = sa[1]   # Set small periods to PGA
 

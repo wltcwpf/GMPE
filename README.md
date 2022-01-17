@@ -32,3 +32,8 @@ You can install the development version from
 library(devtools)
 devtools::install_github("wltcwpf/GMPE")
 ```
+
+## Usage
+
+Please check out [wiki](https://github.com/wltcwpf/GMPE/wiki) for more
+detailed instructions!

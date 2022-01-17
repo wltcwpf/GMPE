@@ -18,7 +18,7 @@ Yes!](https://img.shields.io/badge/Open%20Source-Yes-green.svg)](https://github.
 The pacakge is developed for research use. This package contains
 commonly used Ground Motion Prediction Equations (GMPE). It includes
 five NGA-West2 Models (ASK14, BSSA14, CB14, CY14, and I14) for crustal
-earthquakes; and four (BC Hyrdo 2011 + 2018, Zhao et al 2016, Parker et
+earthquakes; and four (BC Hyrdo 2011 + 2019, Zhao et al 2016, Parker et
 al 2020 NGA-Subduction) for subduction earthquakes. A shallow crustal or
 upper mantle earthquake model by Zhao et al (2017) is also included.
 

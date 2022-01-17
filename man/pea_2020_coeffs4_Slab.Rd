@@ -4,7 +4,9 @@
 \name{pea_2020_coeffs4_Slab}
 \alias{pea_2020_coeffs4_Slab}
 \title{The coefficients for Parker et al 2020}
-\format{An object of class \code{data.frame} with 11 rows and 5 columns.}
+\format{
+An object of class \code{data.frame} with 11 rows and 5 columns.
+}
 \source{
 \url{https://apps.peer.berkeley.edu/publications/peer_reports/reports_2020/PSHAB_Electronic_Supplement.zip}
 }

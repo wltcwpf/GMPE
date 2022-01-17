@@ -1,4 +1,4 @@
-#' The GMPE of BCHydro 2018 for subduction earthquakes (incoporated regional updates for Japan)
+#' The GMPE of BCHydro 2019 for subduction earthquakes (incoporated regional updates for Japan)
 #'
 #' This function calculates the ground motion median values and standard deviations
 #' @param M Moment magnitude, a numeric value
@@ -17,17 +17,17 @@
 #' phi - within event residuals logarithmic standard deviation (log);
 #' tau - between event residuals logarithmic standard deviation (log);
 #' period - the corresponding oscillator periods
-#' @examples bchydro_2018(M = 7.8, T = 1000, Rrup = 85, Rhypo = 100, F_faba = 0, Vs30 = 300, F_event = 0,
+#' @examples bchydro_2019(M = 7.8, T = 1000, Rrup = 85, Rhypo = 100, F_faba = 0, Vs30 = 300, F_event = 0,
 #' Zh = 25)
 #'
-#' bchydro_2018(M = 7.8, T = c(0.010, 0.020, 0.030, 0.050, 0.075, 0.100, 0.150, 0.200, 0.250, 0.300,
+#' bchydro_2019(M = 7.8, T = c(0.010, 0.020, 0.030, 0.050, 0.075, 0.100, 0.150, 0.200, 0.250, 0.300,
 #' 0.400, 0.500, 0.600, 0.750, 1.000, 1.500, 2.000, 2.500, 3.000, 4.000, 5.000), Rrup = 85,
 #' Rhypo = 100, F_faba = 1, Vs30 = 300, F_event = 1, Zh = 65)
-#' @references Abrahamson, N., Gregor, N., and Addo, K. (2016). BC Hydro Ground Motion Prediction Equations
+#' @references Abrahamson, N., Gregor, N., and Addo, K. (2019). BC Hydro Ground Motion Prediction Equations
 # for Subduction Earthquakes. Earthquake Spectra. 32(1), 23-44.
 #' @export
 #' @importFrom stats approx
-bchydro_2018 <- function(M, T = 1000, Rrup, Rhypo, F_faba, Vs30, F_event, Zh){
+bchydro_2019 <- function(M, T = 1000, Rrup, Rhypo, F_faba, Vs30, F_event, Zh){
 
   if(F_event == 0){
     R = Rrup  # interface

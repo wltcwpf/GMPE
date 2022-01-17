@@ -18,17 +18,17 @@
 #' RockSa - median spectral acceleration prediction on Rock reference site (in g);
 #' SiteAmp - Site amplication response spectral (subtraction in log(g)); sigma - totla standard deviation (log);
 #' phiSS - single station standard deviation (log); period - the corresponding oscillator periods
-#' @examples zea_2016_SC_UM(mag = 7.5, T = 1000, fDepth = 0.0, dist = 40.0, DistV = 0.0,
+#' @examples zea_2017_SC_UM(mag = 7.5, T = 1000, fDepth = 0.0, dist = 40.0, DistV = 0.0,
 #' eqkType = 2, FaultMech = 2, SiteClass = 4)
 #'
-#' zea_2016_SC_UM(mag = 7.5, T = c(0.025, 0.5), fDepth = 0.0, dist = 40.0,
+#' zea_2017_SC_UM(mag = 7.5, T = c(0.025, 0.5), fDepth = 0.0, dist = 40.0,
 #' DistV = 0.0, eqkType = 1, FaultMech = 2, SiteClass = 4)
 #' @references Zhao, et al. (2017). Ground‐Motion Prediction Equations for the Vertical Component
 #' from Shallow Crustal and Upper‐Mantle Earthquakes in Japan Using Site Classes as the Site Term.
 #' Bulletin of the Seismological Society of America. 107(5), 2310-2327.
 #' @export
 #' @importFrom stats approx
-zea_2016_SC_UM <- function(mag, T = 1000, fDepth, dist, DistV,
+zea_2017_SC_UM <- function(mag, T = 1000, fDepth, dist, DistV,
                                  eqkType, FaultMech, SiteClass){
 
   period <- c(0.005,0.01,0.02,0.03,0.04,0.05,0.06,

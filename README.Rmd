@@ -39,3 +39,8 @@ devtools::install_github("wltcwpf/GMPE")
 Please check out [wiki](https://github.com/wltcwpf/GMPE/wiki) for more detailed instructions!
 
 
+## Issues
+
+Please report any running issues or leave your comments on the [Issues](https://github.com/wltcwpf/GMPE) page!
+
+

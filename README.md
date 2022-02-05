@@ -41,4 +41,4 @@ detailed instructions!
 ## Issues
 
 Please report any running issues or leave your comments on the
-[Issues](https://github.com/wltcwpf/GMPE) page!
+[Issues](https://github.com/wltcwpf/GMPE/issues) page!

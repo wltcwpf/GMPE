@@ -1,6 +1,6 @@
 Package: GMPE
 Title: A pacakge of commonly used Ground Motion Prediction Equations (GMPE)
-Version: 0.0.0.9000
+Version: 0.0.1.0
 Authors@R: 
     person(given = "Pengfei",
            family = "Wang",
@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-2844-4557"))
 URL: https://github.com/wltcwpf/GMPE
 BugReports: https://github.com/wltcwpf/GMPE/issues
-Description: This package contains commonly used Ground Motion Prediction Equations (GMPE). It includes five NGA-West2 Models for crustal earthquakes; and four (BC Hyrdo 2011 + 2018, Zhao et al 2016, one NGA-Sub) for subducation earthquakes.
+Description: This package contains commonly used Ground Motion Prediction Equations (GMPE). It includes five NGA-West2 Models for crustal earthquakes; and four (BC Hyrdo 2011 + 2018, Zhao et al 2016, one NGA-Sub) for subducation earthquakes; and one NGA CENA model.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

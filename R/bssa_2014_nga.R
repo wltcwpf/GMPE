@@ -168,7 +168,7 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         PGAr[i] <- exp(PGAr_med)
 
       }else{
-        ip_T = which(abs((period- Ti)) < 0.0001)
+        ip_T = which(abs((period - Ti)) < 0.0001)
         res1 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs)
         med[i] <- res1$med
         sig[i] <- res1$sigma

@@ -1,0 +1,9 @@
+#' The coefficients of Stewart et al 2020 CENA Flin Coefficients
+#'
+#' A dataset containing all coefficients for Stewart et al 2020 CENA Flin
+#'
+#' @format A data frame with 40 rows (number of oscillator) and 15 variables
+#' @references
+#' Stewart JP, Parker GA, Atkinson GM, Boore DM, Hashash YMA, Silva WJ. Ergodic site amplification model for central and eastern North America. Earthquake Spectra. 2020;36(1):42-68. doi:10.1177/8755293019878185
+
+"sea_2020_cena_flin_coeffs"

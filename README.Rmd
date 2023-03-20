@@ -23,6 +23,8 @@ knitr::opts_chunk$set(
 
 The pacakge is developed for research use. This package contains commonly used Ground Motion Prediction Equations (GMPE). It includes five NGA-West2 Models (ASK14, BSSA14, CB14, CY14, and I14) for crustal earthquakes; and four (BC Hyrdo 2011 + 2019, Zhao et al 2016, Parker et al 2020 NGA-Subduction) for subduction earthquakes, and one NGA Central and Eastern North America (CENA) Model. A shallow crustal or upper mantle earthquake model by Zhao et al (2017) is also included. 
 
+NGA CENA code was adapted and optimized from [NHR3 Products: Ground Motion Tools](https://www.risksciences.ucla.edu/nhr3/ngaeast-gmtools) for GMM on reference site condition (Vs30 = 3000 m/s) and a Python code written by Tristan Buckreis at UCLA for site amplification models (Stewart et al., 2020; and Hashash et al.,2020)
+
 ## Installation
 
 You can install the development version from [GitHub](https://github.com/) with:

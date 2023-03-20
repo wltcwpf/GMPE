@@ -23,6 +23,12 @@ al 2020 NGA-Subduction) for subduction earthquakes, and one NGA Central
 and Eastern North America (CENA) Model. A shallow crustal or upper
 mantle earthquake model by Zhao et al (2017) is also included.
 
+NGA CENA code was adapted and optimized from [NHR3 Products: Ground
+Motion Tools](https://www.risksciences.ucla.edu/nhr3/ngaeast-gmtools)
+for GMM on reference site condition (Vs30 = 3000 m/s) and a Python code
+written by Tristan Buckreis at UCLA for site amplification models
+(Stewart et al., 2020; and Hashash et al.,2020)
+
 ## Installation
 
 You can install the development version from

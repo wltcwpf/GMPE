@@ -7,7 +7,7 @@
 nga_cena_gmm(M, T = 1000, Rrup, Vs30)
 }
 \arguments{
-\item{M}{Moment magnitude, a numeric value}
+\item{M}{Moment magnitude, a numeric value. The applicable range is between 4 and 8.2}
 
 \item{T}{Period (sec); Use Period = -1 for PGV computation.
 Use 1000 (by default) for output the array of Sa with pre-defined CENA periods: (-1,
@@ -15,9 +15,9 @@ Use 1000 (by default) for output the array of Sa with pre-defined CENA periods: 
 0.11749, 0.12, 0.125893, 0.13, 0.134896, 0.14, 0.15, 0.2, 0.25, 0.3, 0.4,
 0.5, 0.75, 0.8, 1.000, 1.500, 2.000, 3.000, 4.000, 5.000, 7.500, 10.000)}
 
-\item{Rrup}{The closest distance (km) to the fault rupture}
+\item{Rrup}{The closest distance (km) to the fault rupture. The applicable range is less than 1500 km.}
 
-\item{Vs30}{Shear wave velocity averaged over top 30 m (in m/s)}
+\item{Vs30}{Shear wave velocity averaged over top 30 m (in m/s). The applicable range is between 200 and 3000 m/s.}
 }
 \value{
 A list of seven elements is returned: period - the input period of interest;

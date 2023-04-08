@@ -2,14 +2,14 @@
 #'
 #' This function calculates Vs30-specific ground motion median values and standard deviations
 #'
-#' @param M Moment magnitude, a numeric value
+#' @param M Moment magnitude, a numeric value. The applicable range is between 4 and 8.2
 #' @param T Period (sec); Use Period = -1 for PGV computation.
 #' Use 1000 (by default) for output the array of Sa with pre-defined CENA periods: (-1,
 #' 0, 0.010, 0.020, 0.030, 0.040, 0.050, 0.075, 0.080, 0.100, 0.110, 0.112202, 0.114815,
 #' 0.11749, 0.12, 0.125893, 0.13, 0.134896, 0.14, 0.15, 0.2, 0.25, 0.3, 0.4,
 #' 0.5, 0.75, 0.8, 1.000, 1.500, 2.000, 3.000, 4.000, 5.000, 7.500, 10.000)
-#' @param Rrup The closest distance (km) to the fault rupture
-#' @param Vs30 Shear wave velocity averaged over top 30 m (in m/s)
+#' @param Rrup The closest distance (km) to the fault rupture. The applicable range is less than 1500 km.
+#' @param Vs30 Shear wave velocity averaged over top 30 m (in m/s). The applicable range is between 200 and 3000 m/s.
 #' @return A list of seven elements is returned: period - the input period of interest;
 #' med - median spectral acceleration prediction (in g);
 #' sigma - logarithmic standard deviation of spectral acceleration prediction;
@@ -31,6 +31,18 @@
 #' @importFrom stats approx
 #' @importFrom pracma interp2
 nga_cena_gmm <- function(M, T = 1000, Rrup, Vs30){
+
+  if (M < 4 | M > 8.2) {
+    stop('Your input M is outside of the applicable range (between 4 and 8.2). Please adjust!')
+  }
+
+  if (Rrup > 1500 | Rrup < 1) {
+    stop('Your input Rrup is outside of the applicable range (between 1 km and 1500 km). Please adjust!')
+  }
+
+  if (Vs30 < 200 | Vs30 > 3000) {
+    stop('Your input Vs30 is outside of the applicable range (between 200 m/s and 3000 m/s). Please adjust!')
+  }
 
   if (T == 1000) {
     T <- c(-1, 0, 0.010, 0.020, 0.030, 0.040, 0.050, 0.075, 0.080, 0.100, 0.110, 0.112202, 0.114815,
@@ -435,7 +447,7 @@ nga_cena_gmmsiteamp <- function(thisT, Vs30, PGAr, flin_coeffs = sea_2020_cena_f
   } else if ((Vs30 > Vu) & (Vs30 <= 3000)) {
     Fv = c*log(V2/Vref) - (c*log(V2/Vref) + F760)*(log(Vs30/Vu)/log(3000/Vu))
   } else {
-    stop('Error: Vs30 outside of usable range (Vl - 3000 m/s)')
+    stop('Error: Vs30 outside of usable range, between 200 m/s and 3000 m/s')
   }
 
   # Combine VS30-Scaling and F760 models:

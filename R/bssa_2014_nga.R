@@ -574,7 +574,7 @@ bssa_2014_subroutine <- function(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, re
 #' @return A list of three elements: 1) the site-to-source distance;
 #' 2) the distances of the path within each CA subregion; and 3) the CA subregion index where the source is.
 #' @examples CA_subreg_path_calc(site_lon = -118.8713, site_lat = 35.80407, clst_lon = -116.9274, clst_lat = 33.6204)
-#' @importFrom sf st_linestring
+#' @importFrom sf st_linestring st_sfc st_length st_point st_within st_intersection
 #' @export
 CA_subreg_path_calc <- function(site_lon, site_lat, clst_lon, clst_lat) {
 

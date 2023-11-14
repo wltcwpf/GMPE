@@ -2,7 +2,7 @@
 % Please edit documentation in R/bssa_2014_nga.R
 \name{bssa_2014_nga}
 \alias{bssa_2014_nga}
-\title{The GMPE of BSSA 2014}
+\title{The GMPE of BSSA 2014 and updated versions with corrected CA subregional anelastic attenuation and basin effects}
 \usage{
 bssa_2014_nga(
   M,
@@ -12,7 +12,12 @@ bssa_2014_nga(
   region,
   z1 = 999,
   Vs30,
-  return.type = 1
+  return.type = 1,
+  CA_subreg_path = FALSE,
+  site_lon = NULL,
+  site_lat = NULL,
+  clst_lon = NULL,
+  clst_lat = NULL
 )
 }
 \arguments{
@@ -38,6 +43,19 @@ projection of rupture plane}
 \item{return.type}{The indicator specifies which type of data return:
 1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr}
+
+\item{CA_subreg_path}{The flag indicating if a CA subregional anelastic attenuation model (Buckreis et al., 2023) is applied.
+Buckreis, Stewart, Brandenberg, and Wang (2023) "Subregional Anelastic Attenuation Model for California".}
+
+\item{site_lon}{The longitude of site (in WGS84 degree). Required if CA_subreg_path is TRUE.}
+
+\item{site_lat}{The latitude of site (in WGS84 degree). Required if CA_subreg_path is TRUE.}
+
+\item{clst_lon}{Longitude (in WGS84 degrees) of closest point on the surface projection of the rupture surface to the site.
+Required if CA_subreg_path is TRUE.}
+
+\item{clst_lat}{Latitude (in WGS84 degrees) of closest point on the surface projection of the rupture surface to the site.
+Required if CA_subreg_path is TRUE.}
 }
 \value{
 See return.type for the returned results
@@ -47,6 +65,7 @@ This function calculates the ground motion median values and standard deviations
 }
 \examples{
 bssa_2014_nga(M = 5, T = 1000, Rjb = 85, Fault_Type = 1, region = 1, z1 = 999, Vs30 = 350)
+bssa_2014_nga(M = 5, T = 1000, Rjb = 85, Fault_Type = 1, region = 1, z1 = 999, Vs30 = 350, CA_subreg_path = TRUE, site_lon = -118.8713, site_lat = 35.80407, clst_lon = -116.9274, clst_lat = 33.6204)
 }
 \references{
 Boore, D. M., Stewart, J. P., Seyhan, E., and Atkinson, G. M. (2014).

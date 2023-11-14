@@ -1,4 +1,4 @@
-#' The GMPE of BSSA 2014
+#' The GMPE of BSSA 2014 and updated versions with corrected CA subregional anelastic attenuation and basin effects
 #'
 #' This function calculates the ground motion median values and standard deviations
 #' @param M Moment magnitude, a numeric value
@@ -16,14 +16,25 @@
 #' @param return.type The indicator specifies which type of data return:
 #' 1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
 #' 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr
+#' @param CA_subreg_path The flag indicating if a CA subregional anelastic attenuation model (Buckreis et al., 2023) is applied.
+#' Buckreis, Stewart, Brandenberg, and Wang (2023) "Subregional Anelastic Attenuation Model for California".
+#' @param site_lon The longitude of site (in WGS84 degree). Required if CA_subreg_path is TRUE.
+#' @param site_lat The latitude of site (in WGS84 degree). Required if CA_subreg_path is TRUE.
+#' @param clst_lon Longitude (in WGS84 degrees) of closest point on the surface projection of the rupture surface to the site.
+#' Required if CA_subreg_path is TRUE.
+#' @param clst_lat Latitude (in WGS84 degrees) of closest point on the surface projection of the rupture surface to the site.
+#' Required if CA_subreg_path is TRUE.
 #' @return See return.type for the returned results
 #' @examples bssa_2014_nga(M = 5, T = 1000, Rjb = 85, Fault_Type = 1, region = 1, z1 = 999, Vs30 = 350)
+#' bssa_2014_nga(M = 5, T = 1000, Rjb = 85, Fault_Type = 1, region = 1, z1 = 999, Vs30 = 350, CA_subreg_path = TRUE, site_lon = -118.8713, site_lat = 35.80407, clst_lon = -116.9274, clst_lat = 33.6204)
 #' @references Boore, D. M., Stewart, J. P., Seyhan, E., and Atkinson, G. M. (2014).
 #' NGA-West2 Equations for Predicting PGA, PGV, and 5% Damped PSA for
 #' Shallow Crustal Earthquakes. Earthquake Spectra, 30(3), 1057-1085.
 #' @export
 #' @importFrom stats approx
-bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, return.type = 1){
+bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, return.type = 1,
+                          CA_subreg_path = FALSE, site_lon = NULL, site_lat = NULL,
+                          clst_lon = NULL, clst_lat = NULL){
 
   coeffs <- bssa_2014_coeffs
 
@@ -43,6 +54,21 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
   NS = (Fault_Type == 2)
   RS = (Fault_Type == 3)
 
+  # calculate segment distances for the updated anelastic attenuation model
+  if (CA_subreg_path) {
+    if (is.null(site_lon) | is.null(site_lat) | is.null(clst_lat) | is.null(clst_lon)) {
+      print('Invaid input lon/lat. Use default BSSA14 path!')
+      res_dist <- NA
+    } else {
+      res_dist <- CA_subreg_path_calc(site_lon = site_lon, site_lat = site_lat, clst_lon = clst_lon,
+                                      clst_lat = clst_lat)
+      if (!((abs(res_dist$site_source_dist - sum(res_dist$sub_dist)) < 500) & !is.na(res_dist$source_region_idx))) {
+        print('Significant distance segment outside of CA subregions or the source is outside of CA. Use default BSSA14 path!')
+        res_dist <- NA
+      }
+    }
+  }
+
   if(length(T) == 1 & T[1] == 1000){ # Compute median and sigma with pre-defined period
     med <- rep(0,length(period))
     sig <- rep(0,length(period))
@@ -52,12 +78,29 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
     F_P <- rep(0,length(period))
     F_S <- rep(0,length(period))
     for(ip in 1:length(period)){
-      res1 <- bssa_2014_subroutine(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs)
+
+      # calculate updated anelastic attenuation
+      r <- sqrt(Rjb^2 + coeffs$h..km.[ip]^2)
+      if (CA_subreg_path) {
+        if (length(res_dist) > 1) {
+          w_r <- res_dist$sub_dist / sum(res_dist$sub_dist)
+          tmp_dc3_coef <- CA_subreg_coeffs[ip, 3:12]
+          tmp_deltac3 <- sum(w_r * tmp_dc3_coef)
+          tmp_deltac0 <- CA_subreg_coeffs[ip, res_dist$source_region_idx + 12]
+          F_AA <- (coeffs$c3[ip] + tmp_deltac3) * (r - 1) + tmp_deltac0
+        } else {
+          F_AA <- NA
+        }
+      } else {
+        F_AA <- NA
+      }
+
+      res1 <- bssa_2014_subroutine(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs, CA_F_AA = F_AA)
       med[ip] <- res1$med
       sig[ip] <- res1$sigma
       phi[ip] <- res1$phi
       tau[ip] <- res1$tau
-      res2 <- bssa_2014_subroutine(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs)
+      res2 <- bssa_2014_subroutine(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
       F_E[ip] <- res2$F_E
       F_P[ip] <- res2$F_P
       F_S[ip] <- res2$F_S
@@ -88,16 +131,32 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         ip_low  = which(period == T_low)
         ip_high = which(period==T_high)
 
-        res_low <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs)
+        # calculate updated anelastic attenuation
+        r <- sqrt(Rjb^2 + coeffs$h..km.[ip_low]^2)
+        if (CA_subreg_path) {
+          if (length(res_dist) > 1) {
+            w_r <- res_dist$sub_dist / sum(res_dist$sub_dist)
+            tmp_dc3_coef <- CA_subreg_coeffs[ip_low, 3:12]
+            tmp_deltac3 <- sum(w_r * tmp_dc3_coef)
+            tmp_deltac0 <- CA_subreg_coeffs[ip_low, res_dist$source_region_idx + 12]
+            F_AA <- (coeffs$c3[ip_low] + tmp_deltac3) * (r - 1) + tmp_deltac0
+          } else {
+            F_AA <- NA
+          }
+        } else {
+          F_AA <- NA
+        }
+
+        res_low <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs, CA_F_AA = F_AA)
         Sa_low <- res_low$med
         sigma_low <- res_low$sigma
         phi_low <- res_low$phi
         tau_low <- res_low$tau
-        res_low2 <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs)
+        res_low2 <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
         FE_low <- res_low2$F_E
         FP_low <- res_low2$F_P
         FS_low <- res_low2$F_S
-        res_low3 <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs = coeffs)
+        res_low3 <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs = coeffs, CA_F_AA = F_AA)
         r_low <- res_low3$r
         ln_Flin_low <- res_low3$ln_Flin
         ln_Fnlin_low <- res_low3$ln_Fnlin
@@ -106,16 +165,32 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         PGAr_low <- res_low3$PGAr
 
 
-        res_high <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs)
+        # calculate updated anelastic attenuation
+        r <- sqrt(Rjb^2 + coeffs$h..km.[ip_high]^2)
+        if (CA_subreg_path) {
+          if (length(res_dist) > 1) {
+            w_r <- res_dist$sub_dist / sum(res_dist$sub_dist)
+            tmp_dc3_coef <- CA_subreg_coeffs[ip_high, 3:12]
+            tmp_deltac3 <- sum(w_r * tmp_dc3_coef)
+            tmp_deltac0 <- CA_subreg_coeffs[ip_high, res_dist$source_region_idx + 12]
+            F_AA <- (coeffs$c3[ip_high] + tmp_deltac3) * (r - 1) + tmp_deltac0
+          } else {
+            F_AA <- NA
+          }
+        } else {
+          F_AA <- NA
+        }
+
+        res_high <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs, CA_F_AA = F_AA)
         Sa_high <- res_high$med
         sigma_high <- res_high$sigma
         phi_high <- res_high$phi
         tau_high <- res_high$tau
-        res_high2 <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs)
+        res_high2 <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
         FE_high <- res_high2$F_E
         FP_high <- res_high2$F_P
         FS_high <- res_high2$F_S
-        res_high3 <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs)
+        res_high3 <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs, CA_F_AA = F_AA)
         r_high <- res_high3$r
         ln_Flin_high <- res_high3$ln_Flin
         ln_Fnlin_high <- res_high3$ln_Fnlin
@@ -169,16 +244,33 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
 
       }else{
         ip_T = which(abs((period - Ti)) < 0.0001)
-        res1 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs)
+
+        # calculate updated anelastic attenuation
+        r <- sqrt(Rjb^2 + coeffs$h..km.[ip_T]^2)
+        if (CA_subreg_path) {
+          if (length(res_dist) > 1) {
+            w_r <- res_dist$sub_dist / sum(res_dist$sub_dist)
+            tmp_dc3_coef <- CA_subreg_coeffs[ip_T, 3:12]
+            tmp_deltac3 <- sum(w_r * tmp_dc3_coef)
+            tmp_deltac0 <- CA_subreg_coeffs[ip_T, res_dist$source_region_idx + 12]
+            F_AA <- (coeffs$c3[ip_T] + tmp_deltac3) * (r - 1) + tmp_deltac0
+          } else {
+            F_AA <- NA
+          }
+        } else {
+          F_AA <- NA
+        }
+
+        res1 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, coeffs = coeffs, CA_F_AA = F_AA)
         med[i] <- res1$med
         sig[i] <- res1$sigma
         phi[i] <- res1$phi
         tau[i] <- res1$tau
-        res2 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs)
+        res2 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
         F_E[i] <- res2$F_E
         F_P[i] <- res2$F_P
         F_S[i] <- res2$F_S
-        res3 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs = coeffs)
+        res3 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs = coeffs, CA_F_AA = F_AA)
         r[i] <- res3$r
         ln_Flin[i] <- res3$ln_Flin
         ln_Fnlin[i] <- res3$ln_Fnlin
@@ -246,12 +338,15 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
 #' 1 for the med (in g)/sigma/phi/tau; 2 for F_E/F_P/F_S;
 #' 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr
 #' @param coeffs The coefficient table of BSSA 2014. You can use the internal saved data object, bssa_2014_coeffs
+#' @param CA_F_AA The updated anelastic attenuation value by the Buckreis et al 2023 CA subregional anelastic attenuation model.
+#' If unknown, input NA and the default BSSA14 is used.
 #' @return See return.type for the returned results
 #' @references Boore, D. M., Stewart, J. P., Seyhan, E., and Atkinson, G. M. (2014).
 #' NGA-West2 Equations for Predicting PGA, PGV, and 5% Damped PSA for
 #' Shallow Crustal Earthquakes. Earthquake Spectra, 30(3), 1057-1085.
 #' @export
-bssa_2014_subroutine <- function(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 1, coeffs = bssa_2014_coeffs){
+bssa_2014_subroutine <- function(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 1,
+                                 coeffs = bssa_2014_coeffs, CA_F_AA = NA){
 
   mref <- coeffs$Mref[1]
   rref <- coeffs$Rref..km.[1]
@@ -310,11 +405,18 @@ bssa_2014_subroutine <- function(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, re
   }
 
   r <- sqrt(Rjb^2+h[ip]^2)
-  F_P <- (c1[ip] + c2[ip] * (M - mref)) * log (r / rref) + (c3[ip] + deltac3[ip]) * (r - rref)
+
+  if (!is.na(CA_F_AA)) {
+    F_P <- (c1[ip] + c2[ip] * (M - mref)) * log (r / rref) + CA_F_AA
+  } else {
+    F_P <- (c1[ip] + c2[ip] * (M - mref)) * log (r / rref) + (c3[ip] + deltac3[ip]) * (r - rref)
+  }
 
   ## FIND PGAr
   if(Vs30!=v_ref || ip!=2){
-    pgar <- bssa_2014_subroutine(M, 2, Rjb, U, SS, NS, RS, region, z1, v_ref, coeffs = coeffs)
+    pgar <- bssa_2014_subroutine(M = M, ip = 2, Rjb = Rjb, U = U, SS = SS, NS = NS, RS = RS, region = region,
+                                 z1 = z1, Vs30 = v_ref, return.type = 1,
+                                 coeffs = bssa_2014_coeffs, CA_F_AA = CA_F_AA)
     PGA_r <- pgar$med
     sigma_r <- pgar$sigma
     phi_r <- pgar$phi
@@ -462,6 +564,48 @@ bssa_2014_subroutine <- function(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, re
 }
 
 
+#' The subroutine of CA subregional path correction
+#'
+#' This is a subroutine of CA subregional path correction
+#' @param site_lon The longitude of site (in WGS84 degree).
+#' @param site_lat The latitude of site (in WGS84 degree).
+#' @param clst_lon Longitude (in WGS84 degrees) of closest point on the surface projection of the rupture surface to the site.
+#' @param clst_lat Latitude (in WGS84 degrees) of closest point on the surface projection of the rupture surface to the site.
+#' @return A list of three elements: 1) the site-to-source distance;
+#' 2) the distances of the path within each CA subregion; and 3) the CA subregion index where the source is.
+#' @examples CA_subreg_path_calc(site_lon = -118.8713, site_lat = 35.80407, clst_lon = -116.9274, clst_lat = 33.6204)
+#' @importFrom sf st_linestring
+#' @export
+CA_subreg_path_calc <- function(site_lon, site_lat, clst_lon, clst_lat) {
+
+  site_source_path <- st_sfc(st_linestring(x = matrix(c(site_lon, clst_lon, site_lat, clst_lat), nrow = 2)),
+                             crs = 4326)
+
+  source_point <- st_sfc(st_point(x = c(clst_lon, clst_lat)), crs = 4326)
+
+  source_region_idx <- st_within(source_point, CA_subreg)
+
+  site_source_dist <- as.numeric(st_length(site_source_path))
+
+  sub_dist <- rep(0, length(CA_subreg$geometry))
+
+  for (i in 1:length(CA_subreg$geometry)) {
+    tmp <- st_intersection(site_source_path, CA_subreg$geometry[i])
+    if (length(tmp) > 0) {
+      sub_dist[i] <- as.numeric(st_length(tmp))
+    }
+  }
+
+  res <- list()
+
+  res$site_source_dist <- site_source_dist
+
+  res$sub_dist <- sub_dist
+
+  res$source_region_idx <- ifelse(length(source_region_idx) == 0, NA, source_region_idx[[1]])
+
+  return(res)
+}
 
 
 

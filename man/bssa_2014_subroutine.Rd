@@ -16,7 +16,8 @@ bssa_2014_subroutine(
   z1,
   Vs30,
   return.type = 1,
-  coeffs = bssa_2014_coeffs
+  coeffs = bssa_2014_coeffs,
+  CA_F_AA = NA
 )
 }
 \arguments{
@@ -58,6 +59,9 @@ projection of rupture plane}
 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr}
 
 \item{coeffs}{The coefficient table of BSSA 2014. You can use the internal saved data object, bssa_2014_coeffs}
+
+\item{CA_F_AA}{The updated anelastic attenuation value by the Buckreis et al 2023 CA subregional anelastic attenuation model.
+If unknown, input NA and the default BSSA14 is used.}
 }
 \value{
 See return.type for the returned results

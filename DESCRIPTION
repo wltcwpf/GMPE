@@ -1,6 +1,6 @@
 Package: GMPE
 Title: A pacakge of commonly used Ground Motion Prediction Equations (GMPE)
-Version: 1.0.0.0
+Version: 1.1.0.0
 Authors@R: 
     person(given = "Pengfei",
            family = "Wang",
@@ -13,8 +13,10 @@ Description: This package contains commonly used Ground Motion Prediction Equati
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: pracma
 RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 2.1.0)
 Depends: R (>= 2.10)
+Imports: 
+    pracma,
+    sf

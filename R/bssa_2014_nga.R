@@ -14,7 +14,7 @@
 #' 999 if unknown.
 #' @param Vs30 Shear wave velocity averaged over top 30 m (in m/s)
 #' @param return.type The indicator specifies which type of data return:
-#' 1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
+#' 1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_P_GS(geomteric spreading)/F_P_AA(anelastic attenuation)/F_S;
 #' 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr
 #' @param CA_subreg_path The flag indicating if a CA subregional anelastic attenuation model (Buckreis et al., 2023) is applied.
 #' Buckreis, Stewart, Brandenberg, and Wang (2023) "Subregional Anelastic Attenuation Model for California".
@@ -76,6 +76,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
     tau <- rep(0,length(period))
     F_E <- rep(0,length(period))
     F_P <- rep(0,length(period))
+    F_P_GS <- rep(0,length(period))
+    F_P_AA <- rep(0,length(period))
     F_S <- rep(0,length(period))
     for(ip in 1:length(period)){
 
@@ -103,6 +105,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
       res2 <- bssa_2014_subroutine(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
       F_E[ip] <- res2$F_E
       F_P[ip] <- res2$F_P
+      F_P_GS[ip] <- res2$F_P_GS
+      F_P_AA[ip] <- res2$F_P_AA
       F_S[ip] <- res2$F_S
     }
     T <- period
@@ -113,6 +117,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
     tau <- rep(0, length(T))
     F_E <- rep(0, length(T))
     F_P <- rep(0, length(T))
+    F_P_GS <- rep(0, length(T))
+    F_P_AA <- rep(0, length(T))
     F_S <- rep(0, length(T))
     r <- rep(0, length(T))
     ln_Flin <- rep(0, length(T))
@@ -155,6 +161,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         res_low2 <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
         FE_low <- res_low2$F_E
         FP_low <- res_low2$F_P
+        FP_GS_low <- res_low2$F_P_GS
+        FP_AA_low <- res_low2$F_P_AA
         FS_low <- res_low2$F_S
         res_low3 <- bssa_2014_subroutine(M, ip_low, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs = coeffs, CA_F_AA = F_AA)
         r_low <- res_low3$r
@@ -189,6 +197,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         res_high2 <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
         FE_high <- res_high2$F_E
         FP_high <- res_high2$F_P
+        FP_GS_high <- res_high2$F_P_GS
+        FP_AA_high <- res_high2$F_P_AA
         FS_high <- res_high2$F_S
         res_high3 <- bssa_2014_subroutine(M, ip_high, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs, CA_F_AA = F_AA)
         r_high <- res_high3$r
@@ -205,6 +215,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         Y_tau <- c(tau_low, tau_high)
         FE_temp <- c(FE_low, FE_high)
         FP_temp <- c(FP_low, FP_high)
+        FP_GS_temp <- c(FP_GS_low, FP_GS_high)
+        FP_AA_temp <- c(FP_AA_low, FP_AA_high)
         FS_temp <- c(FS_low, FS_high)
         r_temp <- c(r_low, r_high)
         ln_Flin_temp <- c(ln_Flin_low, ln_Flin_high)
@@ -224,9 +236,13 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
 
         FE_med <- approx(x, FE_temp, Ti, rule = 2)$y
         FP_med <- approx(x, FP_temp, Ti, rule = 2)$y
+        FP_GS_med <- approx(x, FP_GS_temp, Ti, rule = 2)$y
+        FP_AA_med <- approx(x, FP_AA_temp, Ti, rule = 2)$y
         FS_med <- approx(x, FS_temp, Ti, rule = 2)$y
         F_E[i] <- FE_med
         F_P[i] <- FP_med
+        F_P_GS[i] <- FP_GS_med
+        F_P_AA[i] <- FP_AA_med
         F_S[i] <- FS_med
 
         r_med <- approx(x, r_temp, Ti, rule = 2)$y
@@ -269,6 +285,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
         res2 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 2, coeffs = coeffs, CA_F_AA = F_AA)
         F_E[i] <- res2$F_E
         F_P[i] <- res2$F_P
+        F_P_GS[i] <- res2$F_P_GS
+        F_P_AA[i] <- res2$F_P_AA
         F_S[i] <- res2$F_S
         res3 <- bssa_2014_subroutine(M, ip_T, Rjb, U, SS, NS, RS, region, z1, Vs30, return.type = 3, coeffs = coeffs, CA_F_AA = F_AA)
         r[i] <- res3$r
@@ -292,6 +310,8 @@ bssa_2014_nga <- function(M, T = 1000, Rjb, Fault_Type, region, z1 = 999, Vs30, 
     effs <- list()
     effs$F_E <- F_E
     effs$F_P <- F_P
+    effs$F_P_GS <- F_P_GS
+    effs$F_P_AA <- F_P_AA
     effs$F_S <- F_S
     effs$period <- T
     return(effs)
@@ -408,8 +428,12 @@ bssa_2014_subroutine <- function(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, re
 
   if (!is.na(CA_F_AA)) {
     F_P <- (c1[ip] + c2[ip] * (M - mref)) * log (r / rref) + CA_F_AA
+    F_P_GS <- (c1[ip] + c2[ip] * (M - mref)) * log (r / rref)
+    F_P_AA <- CA_F_AA
   } else {
     F_P <- (c1[ip] + c2[ip] * (M - mref)) * log (r / rref) + (c3[ip] + deltac3[ip]) * (r - rref)
+    F_P_GS <- (c1[ip] + c2[ip] * (M - mref)) * log (r / rref)
+    F_P_AA <- (c3[ip] + deltac3[ip]) * (r - rref)
   }
 
   ## FIND PGAr
@@ -549,6 +573,8 @@ bssa_2014_subroutine <- function(M, ip, Rjb, U, SS, NS, RS, region, z1, Vs30, re
     effs <- list()
     effs$F_E <- F_E
     effs$F_P <- F_P
+    effs$F_P_GS <- F_P_GS
+    effs$F_P_AA <- F_P_AA
     effs$F_S <- F_S
     return(effs)
   }else if(return.type == 3){

@@ -41,7 +41,7 @@ projection of rupture plane}
 \item{Vs30}{Shear wave velocity averaged over top 30 m (in m/s)}
 
 \item{return.type}{The indicator specifies which type of data return:
-1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_S;
+1 for the med (in g)/sigma/phi/tau/period; 2 for F_E/F_P/F_P_GS(geomteric spreading)/F_P_AA(anelastic attenuation)/F_S;
 3 for r/Ln_Flin/Ln_Fnlin/f2/F_dz1/PGAr}
 
 \item{CA_subreg_path}{The flag indicating if a CA subregional anelastic attenuation model (Buckreis et al., 2023) is applied.

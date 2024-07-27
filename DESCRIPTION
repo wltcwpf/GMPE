@@ -1,6 +1,6 @@
 Package: GMPE
 Title: A pacakge of commonly used Ground Motion Prediction Equations (GMPE)
-Version: 2.1.0
+Version: 2.1.1
 Authors@R: 
     person(given = "Pengfei",
            family = "Wang",

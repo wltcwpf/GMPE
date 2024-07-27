@@ -5,7 +5,7 @@
 #' @param T Period (sec); Use Period = -1 for PGV computation.
 #' Use 1000 (by default) for output the array of Sa with original Pea et al pre-defined periods
 #' @param Rrup Closest distance (km) to the ruptured plane
-#' @param VS30 Shear wave velocity averaged over top 30 m (in m/s)
+#' @param Vs30 Shear wave velocity averaged over top 30 m (in m/s)
 #' @param event.type The indicator of subduction type: 0 for interface; 1 for slab
 #' @param region A string that corresponds to options in the DatabaseRegion column of the flatfile,
 #' plus global. Must be a string in any of: "Global", "Alaska", "Cascadia", "CAM", "Japan", "SA" or "Taiwan".
@@ -33,7 +33,7 @@
 #' @param coefficients3 The model coefficients for aleatory. Use internal saved data, no need to specify.
 #' @param coefficients4_IF The model coefficients for epistemic for interface. Use internal saved data, no need to specify.
 #' @param coefficients4_Slab The model coefficients for epistemic for slab Use internal saved data, no need to specify.
-#' @return A dataframe of 15 variables. 1. period, the same as input; 2. VS30, the same as input;
+#' @return A dataframe of 15 variables. 1. period, the same as input; 2. Vs30, the same as input;
 #' 3. Rrup, the same as input; 4. Tau, even-to-event Std; 5. Phi_total, total within-event Std;
 #' 6. Phi_SS, single station Std; 7. PhiS2S, site-to-site Std;
 #' 8. Phi_partitioned, remaining Std - Phi_total excludes Phi_SS and PhiS2S;
@@ -41,10 +41,10 @@
 #' 11. Mu, median prediction (g - PSA/PGA, cm/s - PGV); 12. Flin, linear amplification;
 #' 13. Fnl, nonlinear amplification; 14. Rock, median prediction on reference rock site (g - PSA/PGA,
 #' cm/s - PGV); 15. Epi, epistemic uncertainty
-#' @examples pea_2020_ngasub(M = 7.8, T = 1000, Rrup = 50, VS30 = 350, event.type = 1,
+#' @examples pea_2020_ngasub(M = 7.8, T = 1000, Rrup = 50, Vs30 = 350, event.type = 1,
 #' hypocentral.depth = 45)
 #'
-#' pea_2020_ngasub(M = 8.5, T = c(0.035, 6), Rrup = 50, VS30 = 450, event.type = 0,
+#' pea_2020_ngasub(M = 8.5, T = c(0.035, 6), Rrup = 50, Vs30 = 450, event.type = 0,
 #' region = "Japan", saturation.region = "Japan_Pac", Z2.5 = "default", hypocentral.depth = 75,
 #' Ts = NA, Reg = "Japan_Pac")
 #' @references Parker, GA, JP Stewart, DM Boore, GM Atkinson, B Hassani (2020).
@@ -53,7 +53,7 @@
 #' UC Berkeley (Center Headquarters), 131 pages.
 #' @export
 #' @importFrom stats approx pchisq
-pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Global",
+pea_2020_ngasub <- function(M, T = 1000, Rrup, Vs30, event.type, region = "Global",
                             saturation.region = "Global", Z2.5 = "default", basin = 0,
                             hypocentral.depth, Ts = NA, Reg = "Global",
                             coefficients1 = pea_2020_coeffs1,
@@ -93,9 +93,9 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
         period_high = min( pre_defined_periods[ idx ] )
 
         # comment: low
-        Res_sigma_low <- Aleatory_Function(period_low, Rrup, VS30, coefficients3)
+        Res_sigma_low <- Aleatory_Function(period_low, Rrup, Vs30, coefficients3)
 
-        Tmp_low <- GMM_at_VS30_IF_v4(event.type,region,saturation.region,Rrup,M,period_low,VS30,Z2.5,basin,coefficients1)
+        Tmp_low <- GMM_at_Vs30_IF_v4(event.type,region,saturation.region,Rrup,M,period_low,Vs30,Z2.5,basin,coefficients1)
 
         Res_sigma_low$Mu <- Tmp_low$mu
 
@@ -108,9 +108,9 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
         Res_sigma_low$Epi <- PSHAB_Epi(event.type,Reg,period_low,coefficients4_IF)
 
         # comment: high
-        Res_sigma_high <- Aleatory_Function(period_high, Rrup, VS30, coefficients3)
+        Res_sigma_high <- Aleatory_Function(period_high, Rrup, Vs30, coefficients3)
 
-        Tmp_high <- GMM_at_VS30_IF_v4(event.type,region,saturation.region,Rrup,M,period_high,VS30,Z2.5,basin,coefficients1)
+        Tmp_high <- GMM_at_Vs30_IF_v4(event.type,region,saturation.region,Rrup,M,period_high,Vs30,Z2.5,basin,coefficients1)
 
         Res_sigma_high$Mu <- Tmp_high$mu
 
@@ -157,9 +157,9 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
 
         period <- pre_defined_periods[ which( abs( pre_defined_periods - period ) < 0.0001 )[ 1 ] ]
 
-        Res_sigma <- Aleatory_Function(period, Rrup, VS30, coefficients3)
+        Res_sigma <- Aleatory_Function(period, Rrup, Vs30, coefficients3)
 
-        Tmp <- GMM_at_VS30_IF_v4(event.type,region,saturation.region,Rrup,M,period,VS30,Z2.5,basin,coefficients1)
+        Tmp <- GMM_at_Vs30_IF_v4(event.type,region,saturation.region,Rrup,M,period,Vs30,Z2.5,basin,coefficients1)
 
         Res_sigma$Mu <- Tmp$mu
 
@@ -188,9 +188,9 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
         period_high = min( pre_defined_periods[ idx ] )
 
         # comment: low
-        Res_sigma_low <- Aleatory_Function(period_low, Rrup, VS30, coefficients3)
+        Res_sigma_low <- Aleatory_Function(period_low, Rrup, Vs30, coefficients3)
 
-        Tmp_low <- GMM_at_VS30_Slab_v4(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period_low,VS30, Z2.5,basin,coefficients2)
+        Tmp_low <- GMM_at_Vs30_Slab_v4(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period_low,Vs30, Z2.5,basin,coefficients2)
 
         Res_sigma_low$Mu <- Tmp_low$mu
 
@@ -203,9 +203,9 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
         Res_sigma_low$Epi <- PSHAB_Epi(event.type,Reg,period_low,coefficients4_Slab)
 
         # comment: high
-        Res_sigma_high <- Aleatory_Function(period_high, Rrup, VS30, coefficients3)
+        Res_sigma_high <- Aleatory_Function(period_high, Rrup, Vs30, coefficients3)
 
-        Tmp_high <- GMM_at_VS30_Slab_v4(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period_high,VS30, Z2.5,basin,coefficients2)
+        Tmp_high <- GMM_at_Vs30_Slab_v4(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period_high,Vs30, Z2.5,basin,coefficients2)
 
         Res_sigma_high$Mu <- Tmp_high$mu
 
@@ -252,9 +252,9 @@ pea_2020_ngasub <- function(M, T = 1000, Rrup, VS30, event.type, region = "Globa
 
         period <- pre_defined_periods[ which( abs( pre_defined_periods - period ) < 0.0001 )[ 1 ] ]
 
-        Res_sigma <- Aleatory_Function(period, Rrup, VS30, coefficients3)
+        Res_sigma <- Aleatory_Function(period, Rrup, Vs30, coefficients3)
 
-        Tmp <- GMM_at_VS30_Slab_v4(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period,VS30, Z2.5,basin,coefficients2)
+        Tmp <- GMM_at_Vs30_Slab_v4(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period,Vs30, Z2.5,basin,coefficients2)
 
         Res_sigma$Mu <- Tmp$mu
 
@@ -291,7 +291,7 @@ erf <- function (x)
 
 
 ## subroutines
-Aleatory_Function <- function(period, Rrup, VS30, coefficients) {
+Aleatory_Function <- function(period, Rrup, Vs30, coefficients) {
   #Want to generate tau, phi, and total sigma computed from both total and partitioned phi models
 
 
@@ -316,7 +316,7 @@ Aleatory_Function <- function(period, Rrup, VS30, coefficients) {
   PhiV <- as.numeric()
   PhiR <- as.numeric()
 
-  for(i in 1:length(VS30)){
+  for(i in 1:length(Vs30)){
 
     if(Rrup[i] <= R1){
       PhiR[i] <- coefficients.T$Phi21
@@ -325,12 +325,12 @@ Aleatory_Function <- function(period, Rrup, VS30, coefficients) {
     }else{
       PhiR[i] <- ((coefficients.T$Phi22-coefficients.T$Phi21)/(log(R2)-log(R1)))*(log(Rrup[i])-log(R1)) + coefficients.T$Phi21
     }
-    if(VS30[i] <= V1){
+    if(Vs30[i] <= V1){
       PhiV[i] <- coefficients.T$Phi2V*(log(R2/max(R1,min(R2,Rrup[i])))/log(R2/R1))
-    }else if(VS30[i] >= V2){
+    }else if(Vs30[i] >= V2){
       PhiV[i] <- 0
     }else{
-      PhiV[i] <- coefficients.T$Phi2V*((log(V2/min(V2,VS30[i])))/(log(V2/V1)))*(log(R2/max(R1,min(R2,Rrup[i])))/(log(R2/R1)))
+      PhiV[i] <- coefficients.T$Phi2V*((log(V2/min(V2,Vs30[i])))/(log(V2/V1)))*(log(R2/max(R1,min(R2,Rrup[i])))/(log(R2/R1)))
     }
 
   }
@@ -343,27 +343,27 @@ Aleatory_Function <- function(period, Rrup, VS30, coefficients) {
   PhiSSR <- as.numeric()
   PhiSSV <- as.numeric()
 
-  for(i in 1:length(VS30)){
-    if(VS30[i] <= V1){
+  for(i in 1:length(Vs30)){
+    if(Vs30[i] <= V1){
       PhiS2SV[i] <- coefficients.T$Phi2S2S.0 + (coefficients.T$a1*log(V1/coefficients.T$VM))*(log(R4/max(R3,min(R4,Rrup[i])))/log(R4/R3))
-    }else if(VS30[i] >= V2){
+    }else if(Vs30[i] >= V2){
       PhiS2SV[i] <- coefficients.T$Phi2S2S.0 + (coefficients.T$a1*log(V2/coefficients.T$VM))
-    }else if(VS30[i] > V1 & VS30[i] < coefficients.T$VM){
-      PhiS2SV[i] <- coefficients.T$Phi2S2S.0 + (coefficients.T$a1*log(VS30[i]/coefficients.T$VM))*(log(R4/max(R3,min(R4,Rrup[i])))/log(R4/R3))
-    }else if(VS30[i] >=coefficients.T$VM & VS30[i] < V2){
-      PhiS2SV[i] <- coefficients.T$Phi2S2S.0 + (coefficients.T$a1*log(VS30[i]/coefficients.T$VM))
+    }else if(Vs30[i] > V1 & Vs30[i] < coefficients.T$VM){
+      PhiS2SV[i] <- coefficients.T$Phi2S2S.0 + (coefficients.T$a1*log(Vs30[i]/coefficients.T$VM))*(log(R4/max(R3,min(R4,Rrup[i])))/log(R4/R3))
+    }else if(Vs30[i] >=coefficients.T$VM & Vs30[i] < V2){
+      PhiS2SV[i] <- coefficients.T$Phi2S2S.0 + (coefficients.T$a1*log(Vs30[i]/coefficients.T$VM))
     }
   }
 
-  for(i in 1:length(VS30)){
-    if(VS30[i] <= V1){
+  for(i in 1:length(Vs30)){
+    if(Vs30[i] <= V1){
       PhiSSV[i] <- coefficients.T$a2*log(V1/coefficients.T$VM)*(log(R4/max(R3,min(R4,Rrup[i])))/log(R4/R3))
-    }else if(VS30[i] >= V2){
+    }else if(Vs30[i] >= V2){
       PhiSSV[i] <- coefficients.T$a2*log(V2/coefficients.T$VM)
-    }else if(VS30[i] > V1 & VS30[i] < coefficients.T$VM){
-      PhiSSV[i] <- coefficients.T$a2*log(VS30[i]/coefficients.T$VM)*(log(R4/max(R3,min(R4,Rrup[i])))/log(R4/R3))
-    }else if(VS30[i] >=coefficients.T$VM & VS30[i] < V2){
-      PhiSSV[i] <- coefficients.T$a2*log(VS30[i]/coefficients.T$VM)
+    }else if(Vs30[i] > V1 & Vs30[i] < coefficients.T$VM){
+      PhiSSV[i] <- coefficients.T$a2*log(Vs30[i]/coefficients.T$VM)*(log(R4/max(R3,min(R4,Rrup[i])))/log(R4/R3))
+    }else if(Vs30[i] >=coefficients.T$VM & Vs30[i] < V2){
+      PhiSSV[i] <- coefficients.T$a2*log(Vs30[i]/coefficients.T$VM)
     }
 
   }
@@ -385,7 +385,7 @@ Aleatory_Function <- function(period, Rrup, VS30, coefficients) {
   # Define output matrix ----------------------------------------------------
 
   sigma.matrix <- data.frame(period = period,
-                             VS30 = VS30,
+                             Vs30 = Vs30,
                              Rrup = Rrup,
                              Tau = coefficients.T$Tau,
                              Phi_total = Phi_tot,
@@ -423,7 +423,7 @@ GMM_at_760_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,c
   # Other pertinent information ---------------------------------------------
   # Coefficient files must be in the active working directory
 
-  # This function has no site term. Can only estimate ground motion at the reference condition VS30 = 760m/s
+  # This function has no site term. Can only estimate ground motion at the reference condition Vs30 = 760m/s
 
   # The output is the desired median model prediction in LN units
   # Take the exponential to get PGA, PSA in g or the PGV in cm/s
@@ -532,7 +532,7 @@ GMM_at_760_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypoce
   # Other pertinent information ---------------------------------------------
   #Coefficient files must be in the active working directory
 
-  # This function has no site term. Can only estimate ground motion at the reference condition VS30 = 760m/s
+  # This function has no site term. Can only estimate ground motion at the reference condition Vs30 = 760m/s
 
   # The output is the desired median model prediction in LN units
   # Take the exponential to get PGA, PSA in g or the PGV in cm/s
@@ -632,7 +632,7 @@ GMM_at_760_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypoce
   return(mu)
 }
 
-GMM_at_VS30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,VS30,Z2.5,basin,coefficients){
+GMM_at_Vs30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,Vs30,Z2.5,basin,coefficients){
 
   #Grace Parker
   #Modified February 26, 2020, to expand comments
@@ -656,7 +656,7 @@ GMM_at_VS30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,
   # period can be: (-1,0,0.01,0.02,0.025,0.03,0.04,0.05,0.075,0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.75,1,1.5,2,2.5,3,4,5,7.5,10)
   # where -1 == PGV and 0 == PGA
 
-  #VS30 in units m/s
+  #Vs30 in units m/s
 
   #Z2.5 in units m. Only used if DatabaseRegion == "Japan" or "Cascadia".
   #Can also specify "default" to get no basin term (e.g. delta_Z2.5 = 0)
@@ -669,7 +669,7 @@ GMM_at_VS30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,
 
   # Coefficient files must be in the active working directory or have the path specified
 
-  # "GMM_at_VS30_IF_v4.R" calls function "GMM_at_760_IF_v4.R" to compute PGAr in the nonlinear site term.
+  # "GMM_at_Vs30_IF_v4.R" calls function "GMM_at_760_IF_v4.R" to compute PGAr in the nonlinear site term.
   #This function must be in the R environment else an error will occur.
 
   # The output is the desired median model prediction in LN units
@@ -765,10 +765,10 @@ GMM_at_VS30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,
   }
 
   #Compute linear site term
-  if(VS30 <= V1){
-    Flin <- s1*log(VS30/V1) + s2*log(V1/Vref)
-  }else if(VS30 <= V2){
-    Flin <- s2*log(VS30/Vref)
+  if(Vs30 <= V1){
+    Flin <- s1*log(Vs30/V1) + s2*log(V1/Vref)
+  }else if(Vs30 <= V2){
+    Flin <- s2*log(Vs30/Vref)
   }else{
     Flin <- s2*log(V2/Vref)
   }
@@ -783,7 +783,7 @@ GMM_at_VS30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,
   if(period >= 3){
     Fnl = 0;
   }else{
-    f2 <- coefficients.T$f4*(exp(coefficients.T$f5*(min(VS30,Vref.Fnl)-Vb))-exp(coefficients.T$f5*(Vref.Fnl-Vb)))
+    f2 <- coefficients.T$f4*(exp(coefficients.T$f5*(min(Vs30,Vref.Fnl)-Vb))-exp(coefficients.T$f5*(Vref.Fnl-Vb)))
     Fnl = 0 + f2*log((PGAr+f3)/f3)
   }
 
@@ -823,7 +823,7 @@ GMM_at_VS30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,
     }
 
 
-    Z2.5.pred <- 10^(theta0 + theta1*(1 + erf((log10(VS30) - log10(vmu))/(vsig*sqrt(2)))))
+    Z2.5.pred <- 10^(theta0 + theta1*(1 + erf((log10(Vs30) - log10(vmu))/(vsig*sqrt(2)))))
     delZ2.5 <- log(Z2.5) - log(Z2.5.pred)
 
     if(delZ2.5 <= (e1/e3)){
@@ -848,7 +848,7 @@ GMM_at_VS30_IF_v4 <- function(event.type,region,saturation.region,Rrup,M,period,
   return(res)
 }
 
-GMM_at_VS30_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period,VS30, Z2.5,basin,coefficients){
+GMM_at_Vs30_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypocentral.depth,period,Vs30, Z2.5,basin,coefficients){
 
   #Grace Parker
   #Modified February 26 to expand comments
@@ -872,7 +872,7 @@ GMM_at_VS30_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypoc
   # period can be: (-1,0,0.01,0.02,0.025,0.03,0.04,0.05,0.075,0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.75,1,1.5,2,2.5,3,4,5,7.5,10)
   # where -1 == PGV and 0 == PGA
 
-  #VS30 in units m/s
+  #Vs30 in units m/s
 
   #Z2.5 in units m. Only used if DatabaseRegion == "Japan" or "Cascadia".
   #Can also specify "default" to get no basin term (e.g. delta_Z2.5 = 0)
@@ -885,13 +885,13 @@ GMM_at_VS30_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypoc
 
   #Coefficient files must be in the active working directory
 
-  # "GMM_at_VS30_Slab_v4.R" calls function "GMM_at_760_Slab_v4.R" to compute PGAr in the nonlinear site term.
+  # "GMM_at_Vs30_Slab_v4.R" calls function "GMM_at_760_Slab_v4.R" to compute PGAr in the nonlinear site term.
   #This function must be in the R environment else an error will occur.
 
   # The output is the desired median model prediction in LN units
   # Take the exponential to get PGA, PSA in g or  PGV in cm/s
 
-  #Function to compute GMM predictions at various VS30s for slab
+  #Function to compute GMM predictions at various Vs30s for slab
 
   if(event.type == 0){
     stop("This function is only for slab")
@@ -998,10 +998,10 @@ GMM_at_VS30_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypoc
   }
 
   #Compute linear site term
-  if(VS30 <= V1){
-    Flin <- s1*log(VS30/V1) + s2*log(V1/Vref)
-  }else if(VS30 <= V2){
-    Flin <- s2*log(VS30/Vref)
+  if(Vs30 <= V1){
+    Flin <- s1*log(Vs30/V1) + s2*log(V1/Vref)
+  }else if(Vs30 <= V2){
+    Flin <- s2*log(Vs30/Vref)
   }else{
     Flin <- s2*log(V2/Vref)
   }
@@ -1016,7 +1016,7 @@ GMM_at_VS30_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypoc
   if(period >= 3){
     Fnl = 0;
   }else{
-    f2 <- coefficients.T$f4*(exp(coefficients.T$f5*(min(VS30,Vref.Fnl)-Vb))-exp(coefficients.T$f5*(Vref.Fnl-Vb)))
+    f2 <- coefficients.T$f4*(exp(coefficients.T$f5*(min(Vs30,Vref.Fnl)-Vb))-exp(coefficients.T$f5*(Vref.Fnl-Vb)))
     Fnl = 0 + f2*log((PGAr+f3)/f3)
   }
 
@@ -1055,7 +1055,7 @@ GMM_at_VS30_Slab_v4 <- function(event.type,region,saturation.region,Rrup,M,hypoc
       e1 <- coefficients.T$J_e1
     }
 
-    Z2.5.pred <- 10^(theta0 + theta1*(1 + erf((log10(VS30) - log10(vmu))/(vsig*sqrt(2)))))
+    Z2.5.pred <- 10^(theta0 + theta1*(1 + erf((log10(Vs30) - log10(vmu))/(vsig*sqrt(2)))))
     delZ2.5 <- log(Z2.5) - log(Z2.5.pred)
 
     if(delZ2.5 <= (e1/e3)){

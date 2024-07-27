@@ -12,10 +12,10 @@ et al 2020 NGA-Subduction) for subduction earthquakes.
 A shallow crustal or upper mantle earthquake model by Zhao et al (2017) is also included.
 }
 \note{
-There are 11 GMPE functions:
+There are 12 GMPE functions:
 \code{ask_2014_nga, bssa_2014_nga, cb_2014_nga, cy_2014_nga, i_2014_nga,
 zea_2016_SC_UM, zea_2016_Sub_Interf, zea_2016_Sub_Slab, bchydro_2011,
-bchydro_2018, pea_2020_ngasub}
+bchydro_2018, pea_2020_ngasub, nga_cena_gmm}
 }
 \examples{
 ## Not run:

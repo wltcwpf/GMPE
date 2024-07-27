@@ -8,7 +8,7 @@ pea_2020_ngasub(
   M,
   T = 1000,
   Rrup,
-  VS30,
+  Vs30,
   event.type,
   region = "Global",
   saturation.region = "Global",
@@ -32,7 +32,7 @@ Use 1000 (by default) for output the array of Sa with original Pea et al pre-def
 
 \item{Rrup}{Closest distance (km) to the ruptured plane}
 
-\item{VS30}{Shear wave velocity averaged over top 30 m (in m/s)}
+\item{Vs30}{Shear wave velocity averaged over top 30 m (in m/s)}
 
 \item{event.type}{The indicator of subduction type: 0 for interface; 1 for slab}
 
@@ -75,7 +75,7 @@ Ts = NA will take the same periods as T.}
 \item{coefficients4_Slab}{The model coefficients for epistemic for slab Use internal saved data, no need to specify.}
 }
 \value{
-A dataframe of 15 variables. 1. period, the same as input; 2. VS30, the same as input;
+A dataframe of 15 variables. 1. period, the same as input; 2. Vs30, the same as input;
 3. Rrup, the same as input; 4. Tau, even-to-event Std; 5. Phi_total, total within-event Std;
 6. Phi_SS, single station Std; 7. PhiS2S, site-to-site Std;
 8. Phi_partitioned, remaining Std - Phi_total excludes Phi_SS and PhiS2S;
@@ -88,10 +88,10 @@ cm/s - PGV); 15. Epi, epistemic uncertainty
 This function calculates the ground motion median values and standard deviations
 }
 \examples{
-pea_2020_ngasub(M = 7.8, T = 1000, Rrup = 50, VS30 = 350, event.type = 1,
+pea_2020_ngasub(M = 7.8, T = 1000, Rrup = 50, Vs30 = 350, event.type = 1,
 hypocentral.depth = 45)
 
-pea_2020_ngasub(M = 8.5, T = c(0.035, 6), Rrup = 50, VS30 = 450, event.type = 0,
+pea_2020_ngasub(M = 8.5, T = c(0.035, 6), Rrup = 50, Vs30 = 450, event.type = 0,
 region = "Japan", saturation.region = "Japan_Pac", Z2.5 = "default", hypocentral.depth = 75,
 Ts = NA, Reg = "Japan_Pac")
 }

@@ -10,10 +10,10 @@
 #' @name GMPE-package
 #' @aliases GMPE GMPE-package
 #'
-#' @note There are 11 GMPE functions:
+#' @note There are 12 GMPE functions:
 #' \code{ask_2014_nga, bssa_2014_nga, cb_2014_nga, cy_2014_nga, i_2014_nga,
 #' zea_2016_SC_UM, zea_2016_Sub_Interf, zea_2016_Sub_Slab, bchydro_2011,
-#' bchydro_2018, pea_2020_ngasub}
+#' bchydro_2018, pea_2020_ngasub, nga_cena_gmm}
 #'
 #' @examples
 #' ## Not run:
